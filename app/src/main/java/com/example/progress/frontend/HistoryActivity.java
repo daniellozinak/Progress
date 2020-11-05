@@ -1,8 +1,10 @@
-package com.example.progress;
+package com.example.progress.frontend;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.progress.R;
 
 public class HistoryActivity extends AppCompatActivity {
 

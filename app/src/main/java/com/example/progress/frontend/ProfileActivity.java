@@ -1,7 +1,9 @@
-package com.example.progress;
+package com.example.progress.frontend;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.progress.R;
 
 public class ProfileActivity extends AppCompatActivity {
 
