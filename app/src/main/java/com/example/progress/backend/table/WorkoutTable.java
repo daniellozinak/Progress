@@ -8,6 +8,7 @@ import com.example.progress.backend.DatabaseHelper;
 import com.example.progress.backend.row.ClientRow;
 import com.example.progress.backend.row.WorkoutRow;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class WorkoutTable {
@@ -22,10 +23,16 @@ public class WorkoutTable {
     public static final String SQL_COLUMN_END = "end";
     public static final String SQL_COLUMN_NAME = "name";
 
+
+    //SELECT
     public static final String SQL_QUERY_ALL = "SELECT * FROM " + SQL_TABLE_NAME;
     public static final String SQL_QUERY_ONE_BY_ID = "SELECT * FROM " + SQL_TABLE_NAME + " WHERE " + SQL_COLUMN_WORKOUT_ID + " = ";
+    public static final String SQL_QUERY_BY_CLIENT = "SELECT * FROM " + SQL_TABLE_NAME + " WHERE " + ClientTable.SQL_COLUMN_CLIENT_ID  + " = ";
+
+    //DELETE
     public static final String SQL_DELETE_ALL = "DELETE FROM " + SQL_TABLE_NAME;
-    public static final String SQL_QUERY_BY_CLIENT = "SELECTT * FROM " + SQL_TABLE_NAME + " WHERE " + ClientTable.SQL_COLUMN_CLIENT_ID  + " = ";
+    public static final String SQL_DELETE_BY_CLIENT = "DELETE FROM " + SQL_TABLE_NAME + "WHERE " + SQL_COLUMN_CLIENT_ID + " = ";
+    public static final String SQL_DELETE_BY_ID = "DELETE FROM " + SQL_TABLE_NAME + "WHERE " + SQL_COLUMN_WORKOUT_ID + " = ";
 
 
     public static final String SQL_TABLE_CREATE = " CREATE TABLE " + SQL_TABLE_NAME + " (" +
@@ -80,11 +87,44 @@ public class WorkoutTable {
         return workoutRow;
     }
 
-    //TODO 1: Cascade delete
-    public void deleteWorkouts(DatabaseHelper helper)
+    public ArrayList<WorkoutRow> findClientWorkouts(ClientRow clientRow,DatabaseHelper helper)
     {
-        SQLiteDatabase db = helper.getWritableDatabase();
-        db.execSQL(WorkoutTable.SQL_DELETE_ALL);
+        //initialize array list
+        ArrayList<WorkoutRow> toReturnArray  = new ArrayList<WorkoutRow>();
+
+        //get instance of database
+        SQLiteDatabase database = helper.getReadableDatabase();
+        Cursor cursor = null;
+
+        try {
+            //create cursor
+            cursor = database.rawQuery(WorkoutTable.SQL_QUERY_BY_CLIENT + clientRow.getClientID(), null);
+            cursor.moveToFirst();
+
+            //loop trough
+            while (!cursor.isAfterLast()) {
+                //get attributes
+                int workoutID = cursor.getInt(cursor.getColumnIndex(WorkoutTable.SQL_COLUMN_WORKOUT_ID));
+                int clientID = cursor.getInt(cursor.getColumnIndex(WorkoutTable.SQL_COLUMN_CLIENT_ID));
+                String name = cursor.getString(cursor.getColumnIndex(WorkoutTable.SQL_COLUMN_NAME));
+                long start = cursor.getLong(cursor.getColumnIndex(WorkoutTable.SQL_COLUMN_START));
+                long end = cursor.getLong(cursor.getColumnIndex(WorkoutTable.SQL_COLUMN_END));
+
+                ClientTable instance = ClientTable.getInstance();
+
+                //create and store client
+                WorkoutRow workoutRow = new WorkoutRow(clientRow, start, end, name);
+                workoutRow.setWorkoutID(workoutID);
+                toReturnArray.add(workoutRow);
+                cursor.moveToNext();
+            }
+        }
+        finally {
+            assert cursor != null;
+            cursor.close();
+        }
+        cachedWorkoutRows = toReturnArray;
+        return toReturnArray;
     }
 
     public ArrayList<WorkoutRow> findAllWorkouts(DatabaseHelper helper)
@@ -153,10 +193,17 @@ public class WorkoutTable {
                 WorkoutTable.SQL_COLUMN_WORKOUT_ID + " = " + workoutRow.getWorkoutID(),null);
     }
 
-    //TODO 1: Cascade delete
     public int deleteClientWorkout(ClientRow clientRow,DatabaseHelper helper)
     {
         SQLiteDatabase database = helper.getWritableDatabase();
+        ArrayList<WorkoutRow> workoutsToDelete = findClientWorkouts(clientRow,helper);
+
+        ExerciseTable exerciseInstance = ExerciseTable.getInstance();
+
+        for(WorkoutRow workout : workoutsToDelete)
+        {
+            exerciseInstance.deleteWorkoutExercise(workout,helper);
+        }
 
         return database.delete(WorkoutTable.SQL_TABLE_NAME,
                 ClientTable.SQL_COLUMN_CLIENT_ID + " = " + clientRow.getClientID(),null);

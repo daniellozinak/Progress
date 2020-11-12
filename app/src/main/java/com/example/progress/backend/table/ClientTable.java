@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.example.progress.backend.DatabaseHelper;
 import com.example.progress.backend.row.ClientRow;
+import com.example.progress.backend.row.WorkoutRow;
 
 import java.util.ArrayList;
 import java.util.zip.CheckedOutputStream;
@@ -63,11 +64,12 @@ public class ClientTable {
         return clientRow;
     }
 
-    //TODO 1: Cascade delete
     public void deleteClients(DatabaseHelper helper)
     {
         SQLiteDatabase db = helper.getWritableDatabase();
         db.execSQL(ClientTable.SQL_DELETE_ALL);
+        db.execSQL(WorkoutTable.SQL_DELETE_ALL);
+        db.execSQL(ExerciseTable.SQL_DELETE_ALL);
     }
 
     public ArrayList<ClientRow> findAllClients(DatabaseHelper helper)
@@ -111,11 +113,12 @@ public class ClientTable {
                 ClientTable.SQL_COLUMN_CLIENT_ID+ " = " + clientRow.getClientID(),null);
     }
 
-    //TODO 1: Cascade delete
     public int deleteClient(ClientRow clientRow,DatabaseHelper helper)
     {
         SQLiteDatabase database = helper.getWritableDatabase();
+        WorkoutTable workoutInstance   = WorkoutTable.getInstance();
 
+        workoutInstance.deleteClientWorkout(clientRow,helper);
 
         return database.delete(ClientTable.SQL_TABLE_NAME,
                 ClientTable.SQL_COLUMN_CLIENT_ID+ " = " + clientRow.getClientID(),null);

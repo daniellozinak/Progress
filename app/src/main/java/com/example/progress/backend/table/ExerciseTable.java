@@ -121,9 +121,10 @@ public class ExerciseTable {
 
     public void deleteExercises(DatabaseHelper helper)
     {
-        SQLiteDatabase db = helper.getWritableDatabase();
-        db.execSQL(ExerciseTable.SQL_DELETE_ALL);
+        SQLiteDatabase database = helper.getWritableDatabase();
+        database.execSQL(ExerciseTable.SQL_DELETE_ALL);
     }
+
 
     public int updateExercise(ExerciseRow exerciseRow,DatabaseHelper helper)
     {

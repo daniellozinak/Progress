@@ -35,8 +35,11 @@ public class MainActivity extends AppCompatActivity {
         WorkoutTable workoutInstance   = WorkoutTable.getInstance();
         ExerciseTable exerciseInstance = ExerciseTable.getInstance();
 
-        ClientRow client = clientInstance.findClient(14,dbHelper);
-        ArrayList<WorkoutRow> workouts  =  workoutInstance.findAllWorkouts(dbHelper);
+        ClientRow client = clientInstance.findClient(13,dbHelper);
+        clientInstance.deleteClient(client,dbHelper);
+
+        ArrayList<ClientRow> clients = clientInstance.findAllClients(dbHelper);
+        ArrayList<WorkoutRow> allworkouts  =  workoutInstance.findAllWorkouts(dbHelper);
         ArrayList<ExerciseRow> exercises  =  exerciseInstance.findAllExercises(dbHelper);
     }
 
