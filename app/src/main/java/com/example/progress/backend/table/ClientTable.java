@@ -29,6 +29,8 @@ public class ClientTable {
     public static final String SQL_DELETE_ALL = "DELETE  FROM " + SQL_TABLE_NAME;
     public static final String SQL_QUERY_ONE_BY_ID = "SELECT * FROM " + SQL_TABLE_NAME + " WHERE " + SQL_COLUMN_CLIENT_ID + " = ";
 
+    public static final int NAME_LIMIT = 30;
+
 
     //db
     public boolean insertClient(ClientRow clientRow, DatabaseHelper helper)

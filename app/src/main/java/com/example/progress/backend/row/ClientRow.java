@@ -17,9 +17,7 @@ public class ClientRow {
 
     @Override
     public String toString() {
-        return "Client{" +
-                " nickname='" + nickname + '\'' +
-                '}';
+        return nickname;
     }
 
     public int getClientID() {

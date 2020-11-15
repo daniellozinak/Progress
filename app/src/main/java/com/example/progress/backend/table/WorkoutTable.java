@@ -8,7 +8,6 @@ import com.example.progress.backend.DatabaseHelper;
 import com.example.progress.backend.row.ClientRow;
 import com.example.progress.backend.row.WorkoutRow;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class WorkoutTable {

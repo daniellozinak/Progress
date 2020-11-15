@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    private boolean isLogged = false;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +36,6 @@ public class MainActivity extends AppCompatActivity {
         WorkoutTable workoutInstance   = WorkoutTable.getInstance();
         ExerciseTable exerciseInstance = ExerciseTable.getInstance();
 
-        ClientRow client = clientInstance.findClient(13,dbHelper);
-        clientInstance.deleteClient(client,dbHelper);
-
         ArrayList<ClientRow> clients = clientInstance.findAllClients(dbHelper);
         ArrayList<WorkoutRow> allworkouts  =  workoutInstance.findAllWorkouts(dbHelper);
         ArrayList<ExerciseRow> exercises  =  exerciseInstance.findAllExercises(dbHelper);
@@ -50,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void startProfileActivity(View view) {
         Intent mIntent = new Intent(this,ProfileActivity.class);
+        mIntent.putExtra("Logged",isLogged);
         startActivity(mIntent);
     }
 

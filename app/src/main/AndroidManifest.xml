@@ -9,12 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Progress">
-        <activity android:name=".frontend.HistoryActivity"></activity>
+        <activity android:name=".frontend.ShowProfileActivity"></activity>
+        <activity android:name=".frontend.ProfileActivity" />
+        <activity android:name=".frontend.HistoryActivity" />
         <activity android:name=".frontend.WorkoutActivity" />
-        <activity
-            android:name=".frontend.ProfileActivity"
-            android:label="@string/title_activity_profile"
-            android:theme="@style/Theme.Progress.NoActionBar" />
         <activity android:name=".frontend.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
