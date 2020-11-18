@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".frontend.ShowProfileActivity">
+    tools:context=".frontend.activities.ShowProfileActivity">
+
+    <include layout="@layout/activity_main" />
 
     <ListView
         android:id="@+id/profileListView"

@@ -1,10 +1,9 @@
-package com.example.progress.frontend;
+package com.example.progress.frontend.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -31,7 +30,6 @@ public class ShowProfileActivity extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("debug", "Position: " + position + " ID: " + id);
                 Intent mIntent = new Intent(getApplicationContext(),ProfileActivity.class);
                 mIntent.putExtra("ListPosition",position);
                 startActivity(mIntent);

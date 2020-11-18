@@ -46,6 +46,9 @@ public class ExerciseTable {
         contentValues.put(ExerciseTable.SQL_COLUMN_REPS,exerciseRow.getReps());
 
         long id = db.insert(ExerciseTable.SQL_TABLE_NAME,null,contentValues);
+
+        exerciseRow.setExerciseID(getLastID(helper));
+
         return (id!=-1);
     }
 
@@ -169,5 +172,15 @@ public class ExerciseTable {
             instance = new ExerciseTable();
         }
         return instance;
+    }
+
+    private  int getLastID(DatabaseHelper helper) {
+        SQLiteDatabase database = helper.getWritableDatabase();
+        final String MY_QUERY = "SELECT last_insert_rowid()";
+        Cursor cur = database.rawQuery(MY_QUERY, null);
+        cur.moveToFirst();
+        int ID = cur.getInt(0);
+        cur.close();
+        return ID;
     }
 }

@@ -41,6 +41,9 @@ public class ClientTable {
         contentValues.put(ClientTable.SQL_COLUMN_NICKNAME, clientRow.getNickname());
 
         long id = db.insert(ClientTable.SQL_TABLE_NAME,null,contentValues);
+
+        clientRow.setClientID(getLastID(helper));
+
         return (id!=-1);
     }
 
@@ -139,5 +142,15 @@ public class ClientTable {
             instance = new ClientTable();
         }
         return instance;
+    }
+
+    private  int getLastID(DatabaseHelper helper) {
+        SQLiteDatabase database = helper.getWritableDatabase();
+        final String MY_QUERY = "SELECT last_insert_rowid()";
+        Cursor cur = database.rawQuery(MY_QUERY, null);
+        cur.moveToFirst();
+        int ID = cur.getInt(0);
+        cur.close();
+        return ID;
     }
 }

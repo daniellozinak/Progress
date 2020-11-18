@@ -1,4 +1,5 @@
-package com.example.progress.frontend;
+package com.example.progress.frontend.activities;
+
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import com.example.progress.backend.row.WorkoutRow;
 import com.example.progress.backend.table.ClientTable;
 import com.example.progress.backend.table.ExerciseTable;
 import com.example.progress.backend.table.WorkoutTable;
+import com.example.progress.frontend.activities.settings.Settings;
 
 import java.util.ArrayList;
 
@@ -36,9 +38,15 @@ public class MainActivity extends AppCompatActivity {
         WorkoutTable workoutInstance   = WorkoutTable.getInstance();
         ExerciseTable exerciseInstance = ExerciseTable.getInstance();
 
+        ClientRow test_client = clientInstance.findClient(23,dbHelper);
+        Settings.getInstance().setCurrentClient(test_client);
+
+        workoutInstance.deleteClientWorkout(test_client,dbHelper);
+
         ArrayList<ClientRow> clients = clientInstance.findAllClients(dbHelper);
         ArrayList<WorkoutRow> allworkouts  =  workoutInstance.findAllWorkouts(dbHelper);
         ArrayList<ExerciseRow> exercises  =  exerciseInstance.findAllExercises(dbHelper);
+
     }
 
     public void startWorkoutActivity(View view) {
@@ -54,6 +62,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void startHistoryActivity(View view) {
         Intent mIntent = new Intent(this,HistoryActivity.class);
+        startActivity(mIntent);
+    }
+
+    public void startSettingsActivity(View view) {
+        Intent mIntent = new Intent(this,SettingsActivity.class);
         startActivity(mIntent);
     }
 }

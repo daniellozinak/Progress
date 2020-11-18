@@ -56,6 +56,8 @@ public class WorkoutTable {
         contentValues.put(WorkoutTable.SQL_COLUMN_END, workoutRow.getEnd());
 
         long id = db.insert(WorkoutTable.SQL_TABLE_NAME,null,contentValues);
+        workoutRow.setWorkoutID(getLastID(helper));
+
         return (id!=-1);
     }
 
@@ -172,6 +174,7 @@ public class WorkoutTable {
         SQLiteDatabase database = helper.getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
+        contentValues.put(WorkoutTable.SQL_COLUMN_WORKOUT_ID,workoutRow.getWorkoutID());
         contentValues.put(WorkoutTable.SQL_COLUMN_CLIENT_ID, workoutRow.getClientRow().getClientID());
         contentValues.put(WorkoutTable.SQL_COLUMN_NAME, workoutRow.getName());
         contentValues.put(WorkoutTable.SQL_COLUMN_START, workoutRow.getStart());
@@ -221,5 +224,15 @@ public class WorkoutTable {
             instance = new WorkoutTable();
         }
         return instance;
+    }
+
+    private  int getLastID(DatabaseHelper helper) {
+        SQLiteDatabase database = helper.getWritableDatabase();
+        final String MY_QUERY = "SELECT last_insert_rowid()";
+        Cursor cur = database.rawQuery(MY_QUERY, null);
+        cur.moveToFirst();
+        int ID = cur.getInt(0);
+        cur.close();
+        return ID;
     }
 }
