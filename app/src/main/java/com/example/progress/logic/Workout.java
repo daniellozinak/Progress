@@ -1,23 +1,27 @@
 package com.example.progress.logic;
 
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
+
+import android.util.Log;
 
 import com.example.progress.backend.DatabaseHelper;
 import com.example.progress.backend.row.ClientRow;
+import com.example.progress.backend.row.ExerciseRow;
 import com.example.progress.backend.row.WorkoutRow;
+import com.example.progress.backend.table.ExerciseTable;
 import com.example.progress.backend.table.WorkoutTable;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Workout  {
     private WorkoutRow currentWorkout = null;
     private DatabaseHelper helper=null;
+    private ArrayList<Exercise> exerciseList = null;
 
     public Workout(DatabaseHelper helper)
     {
         this.helper = helper;
+        exerciseList = new ArrayList<>();
     }
 
     public boolean startWorkout(ClientRow client,String name)
@@ -33,6 +37,14 @@ public class Workout  {
         assert(currentWorkout!=null);
         currentWorkout.setEnd(new Date().getTime());
         int rowsEffected = WorkoutTable.getInstance().updateWorkout(currentWorkout,helper);
+
+        for(Exercise exercise : exerciseList)
+        {
+            if(!exercise.insertExercise(helper)) {return false;}
+        }
+        this.exerciseList.clear();
+
+
         if(rowsEffected > 0)
         {
             currentWorkout = null;
@@ -41,9 +53,32 @@ public class Workout  {
         return false;
     }
 
-    public boolean addExercise()
+
+    public boolean addExercise(ExerciseType type,String exerciseName,int reps)
     {
-        return false;
+        if(!isOngoingWorkout()){return false;}
+        Exercise newExercise = new Exercise(currentWorkout,type,exerciseName,reps);
+        exerciseList.add(newExercise);
+        Log.d("debug","Exercise added to list size:" + exerciseList.size());
+
+        return true;
+    }
+
+    public boolean removeExercise(ExerciseRow exerciseRow)
+    {
+        return exerciseList.remove(exerciseRow);
+    }
+
+    public boolean removeExercise(int index)
+    {
+        try{
+            exerciseList.remove(index);
+        }
+        catch(IndexOutOfBoundsException e)
+        {
+            return  false;
+        }
+        return true;
     }
 
     public long getCurrentTime()
@@ -63,4 +98,13 @@ public class Workout  {
         return this.currentWorkout.getName();
     }
 
+    public WorkoutRow getCurrentWorkout ()
+    {
+        assert(currentWorkout!=null);
+        return currentWorkout;
+    }
+
+    public ArrayList<Exercise> getExerciseList() {
+        return exerciseList;
+    }
 }

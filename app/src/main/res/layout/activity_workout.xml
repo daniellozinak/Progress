@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     tools:context=".frontend.activities.WorkoutActivity">
 
-    <include layout="@layout/activity_main" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/activity_main" />
 
     <TextView
         android:id="@+id/text_timer"
@@ -18,7 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.789" />
+        app:layout_constraintVertical_bias="0.773" />
 
     <Button
         android:id="@+id/button_start"
@@ -44,5 +46,38 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button_addExercise"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="116dp"
+        android:backgroundTint="@color/black"
+        android:onClick="addExercise"
+        android:text="Add Exercise"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/include" />
+
+    <ListView
+        android:id="@+id/listview_exercises"
+        android:layout_width="252dp"
+        android:layout_height="336dp"
+        app:layout_constraintBottom_toTopOf="@+id/text_timer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_addExercise" />
+
+    <Spinner
+        android:id="@+id/spinner_exerciseType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/listview_exercises"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/include"
+        app:layout_constraintVertical_bias="0.503" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

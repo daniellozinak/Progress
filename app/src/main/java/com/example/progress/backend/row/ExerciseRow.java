@@ -1,6 +1,5 @@
 package com.example.progress.backend.row;
 
-import com.example.progress.backend.table.WorkoutTable;
 
 public class ExerciseRow {
     private int exerciseID;
@@ -22,6 +21,15 @@ public class ExerciseRow {
         this.type = type;
         this.name = name;
         this.reps = reps;
+    }
+
+    @Override
+    public String toString() {
+        return "ExerciseRow{" +
+                "type='" + type + '\'' +
+                ", name='" + name + '\'' +
+                ", reps=" + reps +
+                '}';
     }
 
     public int getReps() {

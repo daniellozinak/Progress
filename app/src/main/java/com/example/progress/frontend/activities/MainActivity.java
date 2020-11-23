@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.progress.R;
 import com.example.progress.backend.DatabaseHelper;
@@ -24,6 +25,9 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     private boolean isLogged = false;
+    private TextView logInfo = null;
+
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,12 @@ public class MainActivity extends AppCompatActivity {
         DatabaseHelper dbHelper = new DatabaseHelper(getApplicationContext());
 
 
+        logInfo = findViewById(R.id.text_logginInfo);
+        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getNickname() : "";
+        logInfo.setText(logInfoText);
+
+
+        //debug stuff
         ClientTable clientInstance     = ClientTable.getInstance();
         WorkoutTable workoutInstance   = WorkoutTable.getInstance();
         ExerciseTable exerciseInstance = ExerciseTable.getInstance();
@@ -41,12 +51,17 @@ public class MainActivity extends AppCompatActivity {
         ClientRow test_client = clientInstance.findClient(23,dbHelper);
         Settings.getInstance().setCurrentClient(test_client);
 
-        workoutInstance.deleteClientWorkout(test_client,dbHelper);
 
         ArrayList<ClientRow> clients = clientInstance.findAllClients(dbHelper);
         ArrayList<WorkoutRow> allworkouts  =  workoutInstance.findAllWorkouts(dbHelper);
         ArrayList<ExerciseRow> exercises  =  exerciseInstance.findAllExercises(dbHelper);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getNickname() : "";
+        logInfo.setText(logInfoText);
     }
 
     public void startWorkoutActivity(View view) {
@@ -56,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void startProfileActivity(View view) {
         Intent mIntent = new Intent(this,ProfileActivity.class);
-        mIntent.putExtra("Logged",isLogged);
+        mIntent.putExtra("Logged",Settings.getInstance().isClientLogged());
         startActivity(mIntent);
     }
 

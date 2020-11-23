@@ -4,9 +4,11 @@ import com.example.progress.backend.row.ClientRow;
 
 public class Settings {
     private static Settings instance = null;
-    private Settings(){}
+
+    private Settings(){ }
 
     private ClientRow currentClient = null;
+
 
     public static Settings getInstance() {
         if(instance == null)
@@ -21,4 +23,6 @@ public class Settings {
     public void setCurrentClient(ClientRow currentClient) {
         this.currentClient = currentClient;
     }
+
+    public boolean isClientLogged() {return currentClient!=null;}
 }

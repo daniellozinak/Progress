@@ -18,16 +18,17 @@ import java.util.ArrayList;
 public class ProfileActivity extends AppCompatActivity {
 
     private ArrayList<ClientRow> clients;
-    private TextView profileTextView;
+    private TextView logInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        profileTextView = findViewById(R.id.text_profile);
-        profileTextView.setVisibility(View.INVISIBLE);
 
+        logInfo = findViewById(R.id.text_logginInfo);
+        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getNickname() : "";
+        logInfo.setText(logInfoText);
     }
 
     @Override
@@ -40,14 +41,38 @@ public class ProfileActivity extends AppCompatActivity {
         if(index >= 0)
         {
             Settings.getInstance().setCurrentClient(clients.get(index));
-            profileTextView.setVisibility(View.VISIBLE);
         }
 
+
+        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getNickname() : "";
+        logInfo.setText(logInfoText);
     }
 
 
     public void showProfile(View view) {
         Intent mIntent = new Intent(this,ShowProfileActivity.class);
+        startActivity(mIntent);
+    }
+
+
+    public void startWorkoutActivity(View view) {
+        Intent mIntent = new Intent(this,WorkoutActivity.class);
+        startActivity(mIntent);
+    }
+
+    public void startProfileActivity(View view) {
+        Intent mIntent = new Intent(this,ProfileActivity.class);
+        mIntent.putExtra("Logged",Settings.getInstance().isClientLogged());
+        startActivity(mIntent);
+    }
+
+    public void startHistoryActivity(View view) {
+        Intent mIntent = new Intent(this,HistoryActivity.class);
+        startActivity(mIntent);
+    }
+
+    public void startSettingsActivity(View view) {
+        Intent mIntent = new Intent(this,SettingsActivity.class);
         startActivity(mIntent);
     }
 }

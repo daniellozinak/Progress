@@ -6,14 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".frontend.activities.ShowProfileActivity">
 
-    <include layout="@layout/activity_main" />
+    <include
+        layout="@layout/activity_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <ListView
         android:id="@+id/profileListView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="334dp"
+        android:layout_height="556dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="-1dp"
-        android:layout_marginBottom="1dp" />
+        android:layout_marginStart="38dp"
+        android:layout_marginLeft="38dp"
+        android:layout_marginTop="89dp"
+        android:layout_marginEnd="39dp"
+        android:layout_marginRight="39dp"
+        android:layout_marginBottom="85dp">
+
+    </ListView>
 </RelativeLayout>
