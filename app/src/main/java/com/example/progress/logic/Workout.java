@@ -54,10 +54,10 @@ public class Workout  {
     }
 
 
-    public boolean addExercise(ExerciseType type,String exerciseName,int reps)
+    public boolean addExercise(ExerciseType type,String exerciseName,int reps,int weight)
     {
         if(!isOngoingWorkout()){return false;}
-        Exercise newExercise = new Exercise(currentWorkout,type,exerciseName,reps);
+        Exercise newExercise = new Exercise(currentWorkout,type,exerciseName,reps,weight);
         exerciseList.add(newExercise);
         Log.d("debug","Exercise added to list size:" + exerciseList.size());
 

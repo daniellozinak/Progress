@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         Settings.getInstance().setCurrentClient(test_client);
 
 
+
+
         ArrayList<ClientRow> clients = clientInstance.findAllClients(dbHelper);
         ArrayList<WorkoutRow> allworkouts  =  workoutInstance.findAllWorkouts(dbHelper);
         ArrayList<ExerciseRow> exercises  =  exerciseInstance.findAllExercises(dbHelper);

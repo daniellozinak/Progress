@@ -7,29 +7,28 @@ public class ExerciseRow {
     private String type;
     private String name;
     private int reps;
+    private int weight;
 
-    public ExerciseRow(WorkoutRow workoutRow, String type, String name, int reps) {
+    public ExerciseRow(WorkoutRow workoutRow, String type, String name, int reps,int weight) {
         this.workoutRow = workoutRow;
         this.type = type;
         this.name = name;
         this.reps = reps;
+        this.weight = weight;
     }
 
-    public ExerciseRow(int exerciseID, WorkoutRow workoutRow, String type, String name, int reps) {
+    public ExerciseRow(int exerciseID, WorkoutRow workoutRow, String type, String name, int reps, int weight) {
         this.exerciseID = exerciseID;
         this.workoutRow = workoutRow;
         this.type = type;
         this.name = name;
         this.reps = reps;
+        this.weight = weight;
     }
 
     @Override
     public String toString() {
-        return "ExerciseRow{" +
-                "type='" + type + '\'' +
-                ", name='" + name + '\'' +
-                ", reps=" + reps +
-                '}';
+        return this.name + " [" + this.type + "] " + this.reps + " x " + this.weight + "kg";
     }
 
     public int getReps() {
@@ -71,4 +70,8 @@ public class ExerciseRow {
     public void setName(String name) {
         this.name = name;
     }
+
+    public int getWeight() { return weight; }
+
+    public void setWeight(int weight) { this.weight = weight; }
 }

@@ -22,6 +22,7 @@ public class ExerciseTable {
     public static final String SQL_COLUMN_TYPE        = "type";
     public static final String SQL_COLUMN_NAME        = "name";
     public static final String SQL_COLUMN_REPS        = "reps";
+    public static final String SQL_COLUMN_WEIGHT        = "weight";
 
     public static final String SQL_QUERY_ALL = "SELECT * FROM " + SQL_TABLE_NAME;
     public static final String SQL_QUERY_ONE_BY_ID = "SELECT * FROM " + SQL_TABLE_NAME + " WHERE " + SQL_COLUMN_EXERCISE_ID + " = ";
@@ -33,6 +34,7 @@ public class ExerciseTable {
             SQL_COLUMN_TYPE + " VARCHAR(30), " +
             SQL_COLUMN_NAME + " VARCHAR(30), " +
             SQL_COLUMN_REPS + " INTEGER," +
+            SQL_COLUMN_WEIGHT + "INTEGER" +
             "FOREIGN KEY(" + SQL_COLUMN_WORKOUT_ID + ") REFERENCES " + WorkoutTable.SQL_TABLE_NAME + " ( " + SQL_COLUMN_WORKOUT_ID + "))";
 
     public boolean insertExercise(ExerciseRow exerciseRow, DatabaseHelper helper)
@@ -44,6 +46,7 @@ public class ExerciseTable {
         contentValues.put(ExerciseTable.SQL_COLUMN_NAME,exerciseRow.getName());
         contentValues.put(ExerciseTable.SQL_COLUMN_TYPE,exerciseRow.getType());
         contentValues.put(ExerciseTable.SQL_COLUMN_REPS,exerciseRow.getReps());
+        contentValues.put(ExerciseTable.SQL_COLUMN_WEIGHT,exerciseRow.getWeight());
 
         long id = db.insert(ExerciseTable.SQL_TABLE_NAME,null,contentValues);
 
@@ -67,12 +70,13 @@ public class ExerciseTable {
                 String type    = cursor.getString(cursor.getColumnIndex(ExerciseTable.SQL_COLUMN_TYPE));
                 String name    = cursor.getString(cursor.getColumnIndex(ExerciseTable.SQL_COLUMN_NAME));
                 int reps       = cursor.getInt(cursor.getColumnIndex(ExerciseTable.SQL_COLUMN_REPS));
+                int weight     = cursor.getInt(cursor.getColumnIndex(ExerciseTable.SQL_COLUMN_WEIGHT));
 
                 WorkoutTable instance = WorkoutTable.getInstance();
                 WorkoutRow workoutRow = instance.findWorkout(workoutID,helper);
 
                 //create and store client
-                exerciseRow = new ExerciseRow(exerciseID,workoutRow,type,name,reps);
+                exerciseRow = new ExerciseRow(exerciseID,workoutRow,type,name,reps,weight);
             }
         }finally {
             assert cursor != null;
@@ -104,12 +108,13 @@ public class ExerciseTable {
                 String type    = cursor.getString(cursor.getColumnIndex(ExerciseTable.SQL_COLUMN_TYPE));
                 String name    = cursor.getString(cursor.getColumnIndex(ExerciseTable.SQL_COLUMN_NAME));
                 int reps       = cursor.getInt(cursor.getColumnIndex(ExerciseTable.SQL_COLUMN_REPS));
+                int weight     = cursor.getInt(cursor.getColumnIndex(ExerciseTable.SQL_COLUMN_WEIGHT));
 
                 WorkoutTable instance = WorkoutTable.getInstance();
                 WorkoutRow workoutRow = instance.findWorkout(workoutID,helper);
 
                 //create and store client
-                ExerciseRow exerciseRow = new ExerciseRow(exerciseID,workoutRow,type,name,reps);
+                ExerciseRow exerciseRow = new ExerciseRow(exerciseID,workoutRow,type,name,reps,weight);
                 toReturnArray.add(exerciseRow);
                 cursor.moveToNext();
             }

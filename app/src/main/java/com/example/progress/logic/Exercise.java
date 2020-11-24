@@ -8,9 +8,9 @@ import com.example.progress.backend.table.ExerciseTable;
 public class Exercise {
     private ExerciseRow exerciseRow;
 
-    public Exercise(WorkoutRow workoutRow,ExerciseType type,String name,int reps)
+    public Exercise(WorkoutRow workoutRow,ExerciseType type,String name,int reps,int weight)
     {
-        exerciseRow = new ExerciseRow(workoutRow,type.toString(),name,reps);
+        exerciseRow = new ExerciseRow(workoutRow,type.toString(),name,reps,weight);
     }
 
     public ExerciseRow getExerciseRow() {

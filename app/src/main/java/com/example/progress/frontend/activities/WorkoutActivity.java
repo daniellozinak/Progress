@@ -37,6 +37,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private Spinner exerciseTypeSpinner;
     private EditText editTextExerciseName;
     private EditText editTextReps;
+    private EditText editTextWeight;
     ArrayAdapter<Exercise> adapter;
 
     @Override
@@ -66,7 +67,8 @@ public class WorkoutActivity extends AppCompatActivity {
         this.timerText = findViewById(R.id.text_timer);
         this.listViewExercises = findViewById(R.id.listview_exercises);
         this.editTextExerciseName = findViewById(R.id.editText_exerciseName);
-        this.editTextReps = findViewById(R.id.edittext_reps);
+        this.editTextReps = findViewById(R.id.editText_reps);
+        this.editTextWeight = findViewById(R.id.editText_weight);
 
         //set adapter for exercise spinner
         this.exerciseTypeSpinner = findViewById(R.id.spinner_exerciseType);
@@ -127,11 +129,13 @@ public class WorkoutActivity extends AppCompatActivity {
         ExerciseType exerciseType = ExerciseType.Chest;
         String exerciseName = "BENCH";
         int reps = 0;
+        int weight = 0;
 
         try{
             exerciseType = (ExerciseType)exerciseTypeSpinner.getSelectedItem();
             exerciseName = editTextExerciseName.getText().toString();
             reps = Integer.parseInt(editTextReps.getText().toString());
+            weight = Integer.parseInt(editTextWeight.getText().toString());
         }catch(Exception e)
         {
             e.printStackTrace();
@@ -141,7 +145,7 @@ public class WorkoutActivity extends AppCompatActivity {
         }
 
 
-        if(!this.workout.addExercise(exerciseType,exerciseName,reps))
+        if(!this.workout.addExercise(exerciseType,exerciseName,reps,weight))
         {
             Log.d("debug","Can't add exercise");
             return;
@@ -208,6 +212,7 @@ public class WorkoutActivity extends AppCompatActivity {
             this.editTextExerciseName.setVisibility(View.VISIBLE);
             this.exerciseTypeSpinner.setVisibility(View.VISIBLE);
             this.editTextReps.setVisibility(View.VISIBLE);
+            this.editTextWeight.setVisibility(View.VISIBLE);
             return;
         }
         this.addExerciseButton.setVisibility(View.INVISIBLE);
@@ -218,6 +223,7 @@ public class WorkoutActivity extends AppCompatActivity {
         this.editTextExerciseName.setVisibility(View.INVISIBLE);
         this.exerciseTypeSpinner.setVisibility(View.INVISIBLE);
         this.editTextReps.setVisibility(View.INVISIBLE);
+        this.editTextWeight.setVisibility(View.INVISIBLE);
     }
     
     private void runTimer()

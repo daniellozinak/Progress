@@ -15,11 +15,11 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="341dp"
-        android:layout_marginEnd="127dp"
-        android:layout_marginRight="127dp"
-        android:onClick="showProfile"
+        android:layout_marginTop="97dp"
+        android:layout_marginEnd="23dp"
+        android:layout_marginRight="23dp"
         android:backgroundTint="#212529"
+        android:onClick="showProfile"
         android:text="Select Profile" />
 
 </RelativeLayout>
