@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -26,14 +27,16 @@ import java.text.SimpleDateFormat;
 
 public class WorkoutActivity extends AppCompatActivity {
 
-    private Workout workout = null;
-    private ListView listViewExercises = null;
+    private Workout workout;
+    private ListView listViewExercises;
     private Button addExerciseButton;
     private Button startButton;
     private Button endButton;
     private TextView timerText;
-    private TextView logInfo = null;
-    private Spinner exerciseTypeSpinner = null;
+    private TextView logInfo ;
+    private Spinner exerciseTypeSpinner;
+    private EditText editTextExerciseName;
+    private EditText editTextReps;
     ArrayAdapter<Exercise> adapter;
 
     @Override
@@ -62,9 +65,15 @@ public class WorkoutActivity extends AppCompatActivity {
         this.endButton = findViewById(R.id.button_end);
         this.timerText = findViewById(R.id.text_timer);
         this.listViewExercises = findViewById(R.id.listview_exercises);
+        this.editTextExerciseName = findViewById(R.id.editText_exerciseName);
+        this.editTextReps = findViewById(R.id.edittext_reps);
 
-        //TODO 1 Add options
+        //set adapter for exercise spinner
         this.exerciseTypeSpinner = findViewById(R.id.spinner_exerciseType);
+        ExerciseType[] exerciseTypeArray = new ExerciseType[]{ExerciseType.Core,
+                ExerciseType.Arms,ExerciseType.Back,ExerciseType.Chest,ExerciseType.Legs,ExerciseType.Shoulders};
+        ArrayAdapter<ExerciseType> exerciseTypeAdapter = new ArrayAdapter<ExerciseType>(this, android.R.layout.simple_spinner_dropdown_item,exerciseTypeArray);
+        exerciseTypeSpinner.setAdapter(exerciseTypeAdapter);
 
         timerText.setText("Time: ");
 
@@ -92,9 +101,6 @@ public class WorkoutActivity extends AppCompatActivity {
         this.setVisibility();
     }
 
-
-
-
     public void startWorkoutActivity(View view) {
         Intent mIntent = new Intent(this,WorkoutActivity.class);
         startActivity(mIntent);
@@ -117,7 +123,25 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     public void addExercise(View view) {
-        if(!this.workout.addExercise(ExerciseType.Arms,"Biceps Curl",12))
+
+        ExerciseType exerciseType = ExerciseType.Chest;
+        String exerciseName = "BENCH";
+        int reps = 0;
+
+        try{
+            exerciseType = (ExerciseType)exerciseTypeSpinner.getSelectedItem();
+            exerciseName = editTextExerciseName.getText().toString();
+            reps = Integer.parseInt(editTextReps.getText().toString());
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+            Log.d("debug","Cant add exercise");
+            Log.d("debug",e.toString());
+            return;
+        }
+
+
+        if(!this.workout.addExercise(exerciseType,exerciseName,reps))
         {
             Log.d("debug","Can't add exercise");
             return;
@@ -181,6 +205,9 @@ public class WorkoutActivity extends AppCompatActivity {
             this.endButton.setVisibility(View.VISIBLE);
             this.timerText.setVisibility(View.VISIBLE);
             this.listViewExercises.setVisibility(View.VISIBLE);
+            this.editTextExerciseName.setVisibility(View.VISIBLE);
+            this.exerciseTypeSpinner.setVisibility(View.VISIBLE);
+            this.editTextReps.setVisibility(View.VISIBLE);
             return;
         }
         this.addExerciseButton.setVisibility(View.INVISIBLE);
@@ -188,6 +215,9 @@ public class WorkoutActivity extends AppCompatActivity {
         this.endButton.setVisibility(View.INVISIBLE);
         this.timerText.setVisibility(View.INVISIBLE);
         this.listViewExercises.setVisibility(View.INVISIBLE);
+        this.editTextExerciseName.setVisibility(View.INVISIBLE);
+        this.exerciseTypeSpinner.setVisibility(View.INVISIBLE);
+        this.editTextReps.setVisibility(View.INVISIBLE);
     }
     
     private void runTimer()

@@ -20,26 +20,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.773" />
+        app:layout_constraintVertical_bias="0.806" />
 
     <Button
         android:id="@+id/button_start"
         android:layout_width="399dp"
         android:layout_height="42dp"
-        android:layout_marginBottom="108dp"
+        android:layout_marginBottom="76dp"
         android:backgroundTint="#212529"
         android:onClick="startWorkout"
         android:text="Start Workout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/button_end"
         android:layout_width="399dp"
         android:layout_height="42dp"
-        android:layout_marginBottom="108dp"
+        android:layout_marginBottom="76dp"
         android:backgroundTint="#212529"
         android:onClick="endWorkout"
         android:text="End Workout"
@@ -49,35 +48,66 @@
 
     <Button
         android:id="@+id/button_addExercise"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="116dp"
+        android:layout_width="161dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="160dp"
         android:backgroundTint="@color/black"
         android:onClick="addExercise"
         android:text="Add Exercise"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/include" />
 
     <ListView
         android:id="@+id/listview_exercises"
-        android:layout_width="252dp"
-        android:layout_height="336dp"
+        android:layout_width="304dp"
+        android:layout_height="339dp"
+        android:focusableInTouchMode="false"
+        android:isScrollContainer="false"
         app:layout_constraintBottom_toTopOf="@+id/text_timer"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_addExercise" />
+        app:layout_constraintTop_toBottomOf="@+id/button_addExercise"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Spinner
         android:id="@+id/spinner_exerciseType"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="157dp"
+        android:layout_height="21dp"
         app:layout_constraintBottom_toTopOf="@+id/listview_exercises"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.057"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/include"
-        app:layout_constraintVertical_bias="0.503" />
+        app:layout_constraintVertical_bias="0.582" />
+
+    <EditText
+        android:id="@+id/editText_exerciseName"
+        android:layout_width="166dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="112dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Exercise Name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.724"
+        app:layout_constraintStart_toEndOf="@+id/spinner_exerciseType"
+        app:layout_constraintTop_toTopOf="@+id/include" />
+
+    <EditText
+        android:id="@+id/edittext_reps"
+        android:layout_width="61dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="112dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="0"
+        app:layout_constraintEnd_toStartOf="@+id/editText_exerciseName"
+        app:layout_constraintTop_toTopOf="@+id/include" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
