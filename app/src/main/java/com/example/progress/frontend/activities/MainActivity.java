@@ -18,9 +18,11 @@ import com.example.progress.backend.row.WorkoutRow;
 import com.example.progress.backend.table.ClientTable;
 import com.example.progress.backend.table.ExerciseTable;
 import com.example.progress.backend.table.WorkoutTable;
-import com.example.progress.frontend.activities.settings.Settings;
+import com.example.progress.logic.settings.Settings;
+import com.example.progress.logic.Client;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         logInfo = findViewById(R.id.text_logginInfo);
-        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getNickname() : "";
+        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getClientRow().getNickname() : "";
         logInfo.setText(logInfoText);
 
 
@@ -48,11 +50,9 @@ public class MainActivity extends AppCompatActivity {
         WorkoutTable workoutInstance   = WorkoutTable.getInstance();
         ExerciseTable exerciseInstance = ExerciseTable.getInstance();
 
-        ClientRow test_client = clientInstance.findClient(23,dbHelper);
-        Settings.getInstance().setCurrentClient(test_client);
 
-
-
+        Settings.getInstance().setHelper(dbHelper);
+        //set helper
 
         ArrayList<ClientRow> clients = clientInstance.findAllClients(dbHelper);
         ArrayList<WorkoutRow> allworkouts  =  workoutInstance.findAllWorkouts(dbHelper);
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getNickname() : "";
+        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getClientRow().getNickname() : "";
         logInfo.setText(logInfoText);
     }
 

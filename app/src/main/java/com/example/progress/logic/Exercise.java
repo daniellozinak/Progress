@@ -1,11 +1,11 @@
 package com.example.progress.logic;
 
-import com.example.progress.backend.DatabaseHelper;
 import com.example.progress.backend.row.ExerciseRow;
 import com.example.progress.backend.row.WorkoutRow;
 import com.example.progress.backend.table.ExerciseTable;
+import com.example.progress.logic.settings.Settings;
 
-public class Exercise {
+public class Exercise extends Entity {
     private ExerciseRow exerciseRow;
 
     public Exercise(WorkoutRow workoutRow,ExerciseType type,String name,int reps,int weight)
@@ -16,15 +16,22 @@ public class Exercise {
     public ExerciseRow getExerciseRow() {
         return exerciseRow;
     }
-
-    public boolean insertExercise(DatabaseHelper helper)
-    {
-        assert (exerciseRow!=null);
-        return ExerciseTable.getInstance().insertExercise(exerciseRow,helper);
-    }
-
     public void setExerciseRow(ExerciseRow exerciseRow) {
         this.exerciseRow = exerciseRow;
+    }
+
+    //save ExerciseRow to database
+    @Override
+    public boolean save()
+    {
+        assert (exerciseRow!=null);
+        return ExerciseTable.getInstance().insertExercise(exerciseRow, Settings.getInstance().getHelper());
+    }
+
+    @Override
+    public boolean load(int id) {
+        exerciseRow = ExerciseTable.getInstance().findExercise(id,Settings.getInstance().getHelper());
+        return exerciseRow != null;
     }
 
     @Override

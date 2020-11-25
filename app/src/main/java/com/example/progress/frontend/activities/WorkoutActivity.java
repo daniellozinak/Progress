@@ -17,17 +17,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.progress.R;
-import com.example.progress.backend.DatabaseHelper;
-import com.example.progress.frontend.activities.settings.Settings;
+import com.example.progress.logic.settings.Settings;
 import com.example.progress.logic.Exercise;
 import com.example.progress.logic.ExerciseType;
-import com.example.progress.logic.Workout;
 
 import java.text.SimpleDateFormat;
 
 public class WorkoutActivity extends AppCompatActivity {
 
-    private Workout workout;
     private ListView listViewExercises;
     private Button addExerciseButton;
     private Button startButton;
@@ -51,14 +48,12 @@ public class WorkoutActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getNickname() : "";
+        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getClientRow().getNickname() : "";
         logInfo.setText(logInfoText);
     }
 
     private void init()
     {
-        this.workout = new Workout(new DatabaseHelper(getApplicationContext()));
-
         //init elements
         this.listViewExercises = findViewById(R.id.listview_exercises);
         this.addExerciseButton = findViewById(R.id.button_addExercise);
@@ -82,20 +77,15 @@ public class WorkoutActivity extends AppCompatActivity {
 
         //global info
         logInfo = findViewById(R.id.text_logginInfo);
-        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getNickname() : "";
+        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getClientRow().getNickname() : "";
         logInfo.setText(logInfoText);
-
-
-        //set adapter
-        this.adapter = new ArrayAdapter<Exercise>(this,android.R.layout.simple_list_item_1,workout.getExerciseList());
-        listViewExercises.setAdapter(adapter);
 
 
         //TODO 2: Add Gestures
         listViewExercises.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                workout.removeExercise(position);
+                Settings.getInstance().getCurrentClient().getCurrentWorkout().removeExercise(position);
                 adapter.notifyDataSetChanged();
             }
         });
@@ -145,7 +135,7 @@ public class WorkoutActivity extends AppCompatActivity {
         }
 
 
-        if(!this.workout.addExercise(exerciseType,exerciseName,reps,weight))
+        if(!Settings.getInstance().getCurrentClient().getCurrentWorkout().addExercise(exerciseType,exerciseName,reps,weight))
         {
             Log.d("debug","Can't add exercise");
             return;
@@ -161,12 +151,17 @@ public class WorkoutActivity extends AppCompatActivity {
             return;
         }
 
-        if(!this.workout.startWorkout(Settings.getInstance().getCurrentClient(), "My Workout"))
+        //TODO add workout name
+        if(!Settings.getInstance().getCurrentClient().startWorkout(System.currentTimeMillis(),"My Workout"))
         {
             Toast.makeText(getApplicationContext(), "Can't start workout", Toast.LENGTH_SHORT).show();
             Log.d("debug","Can't start workout");
             return;
         }
+
+        //set adapter
+        this.adapter = new ArrayAdapter<Exercise>(this,android.R.layout.simple_list_item_1,Settings.getInstance().getCurrentClient().getCurrentWorkout().getExerciseList());
+        listViewExercises.setAdapter(adapter);
 
         Toast.makeText(getApplicationContext(), "Workout started", Toast.LENGTH_SHORT).show();
         Log.d("debug","Workout started");
@@ -182,7 +177,7 @@ public class WorkoutActivity extends AppCompatActivity {
             return;
         }
 
-        if(!this.workout.endWorkout())
+        if(!Settings.getInstance().getCurrentClient().endWorkout())
         {
             Toast.makeText(getApplicationContext(), "Can't end workout", Toast.LENGTH_SHORT).show();
             Log.d("debug","Can't end workout");
@@ -202,7 +197,7 @@ public class WorkoutActivity extends AppCompatActivity {
 
     private void setVisibility()
     {
-        if(this.workout.isOngoingWorkout())
+        if(Settings.getInstance().getCurrentClient().isCurrentWorkout())
         {
             this.addExerciseButton.setVisibility(View.VISIBLE);
             this.startButton.setVisibility(View.INVISIBLE);
@@ -234,9 +229,9 @@ public class WorkoutActivity extends AppCompatActivity {
             SimpleDateFormat sdt = new SimpleDateFormat("HH:mm:ss");
             @Override
             public void run() {
-                if(workout.isOngoingWorkout())
+                if(Settings.getInstance().getCurrentClient().isCurrentWorkout())
                 {
-                    timestamp = workout.getCurrentTime();
+                    timestamp = Settings.getInstance().getCurrentClient().getCurrentWorkout().getCurrentTime();
                 }
                 timerText.setText("Time: " + sdt.format(timestamp));
                 handler.postDelayed(this, 100);

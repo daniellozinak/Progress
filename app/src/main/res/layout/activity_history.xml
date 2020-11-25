@@ -6,7 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".frontend.activities.HistoryActivity">
     #
-    <include layout="@layout/activity_main" />
+
+    <include
+        android:id="@+id/include2"
+        layout="@layout/activity_main" />
 
     <TextView
         android:id="@+id/textView3"
@@ -15,6 +18,19 @@
         android:text="History"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.956"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.963" />
+
+    <ListView
+        android:id="@+id/listView_history"
+        android:layout_width="377dp"
+        android:layout_height="508dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.529"
+        app:layout_constraintStart_toStartOf="@+id/include2"
+        app:layout_constraintTop_toTopOf="@+id/include2"
+        app:layout_constraintVertical_bias="0.623" />
 </androidx.constraintlayout.widget.ConstraintLayout>

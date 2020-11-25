@@ -1,23 +1,23 @@
 package com.example.progress.frontend.activities;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.progress.R;
-import com.example.progress.backend.DatabaseHelper;
-import com.example.progress.backend.row.ClientRow;
-import com.example.progress.backend.table.ClientTable;
-import com.example.progress.frontend.activities.settings.Settings;
+import com.example.progress.logic.Client;
+import com.example.progress.logic.settings.Settings;
 
 import java.util.ArrayList;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    private ArrayList<ClientRow> clients;
+    private ArrayList<Client> clients;
     private TextView logInfo;
 
     @Override
@@ -27,24 +27,20 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         logInfo = findViewById(R.id.text_logginInfo);
-        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getNickname() : "";
+        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getClientRow().getNickname() : "";
         logInfo.setText(logInfoText);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onResume() {
         super.onResume();
-        DatabaseHelper dbHelper = new DatabaseHelper(getApplicationContext());
-        clients = ClientTable.getInstance().findAllClients(dbHelper);
+        clients = Client.getAllClients();
         int index = getIntent().getIntExtra("ListPosition",-1);
 
-        if(index >= 0)
-        {
-            Settings.getInstance().setCurrentClient(clients.get(index));
-        }
+        if(index >= 0) { Settings.getInstance().setCurrentClient(clients.get(index)); }
 
-
-        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getNickname() : "";
+        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getClientRow().getNickname() : "";
         logInfo.setText(logInfoText);
     }
 
