@@ -46,6 +46,7 @@ public class Client extends Entity {
         return  false;
     }
 
+
     //returns true if workout is happening right now
     public boolean isCurrentWorkout() {return currentWorkout !=null;}
 
@@ -81,7 +82,7 @@ public class Client extends Entity {
     public ArrayList<Workout> getClientFinishedWorkouts()
     {
         //select all workouts for client
-        ArrayList<WorkoutRow> filtered =WorkoutTable.getInstance().findClientWorkouts(clientRow, Settings.getInstance().getHelper());
+        ArrayList<WorkoutRow> filtered = WorkoutTable.getInstance().findClientWorkouts(clientRow, Settings.getInstance().getHelper());
         //delete if workout is not finished (End timestamp == 0)
         filtered.removeIf(element -> element.getEnd() == 0);
         //create new List<Workout>
@@ -107,5 +108,10 @@ public class Client extends Entity {
     public boolean load(int id) {
         clientRow = ClientTable.getInstance().findClient(id, Settings.getInstance().getHelper());
         return clientRow !=null;
+    }
+
+    @Override
+    public boolean delete() {
+        return ClientTable.getInstance().deleteClient(clientRow,Settings.getInstance().getHelper()) > 0;
     }
 }

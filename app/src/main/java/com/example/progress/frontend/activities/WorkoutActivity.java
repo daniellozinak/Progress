@@ -17,11 +17,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.progress.R;
+import com.example.progress.logic.Exceptions.NoClientException;
 import com.example.progress.logic.settings.Settings;
 import com.example.progress.logic.Exercise;
 import com.example.progress.logic.ExerciseType;
 
 import java.text.SimpleDateFormat;
+import java.util.Set;
 
 public class WorkoutActivity extends AppCompatActivity {
 
@@ -42,7 +44,11 @@ public class WorkoutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
 
-        this.init();
+        try {
+            this.init();
+        } catch (NoClientException e) {
+            Log.d("debug","Choose a client first");
+        }
     }
 
     @Override
@@ -52,8 +58,9 @@ public class WorkoutActivity extends AppCompatActivity {
         logInfo.setText(logInfoText);
     }
 
-    private void init()
-    {
+    private void init() throws NoClientException {
+        if(Settings.getInstance().getCurrentClient() == null) { throw new NoClientException(); }
+
         //init elements
         this.listViewExercises = findViewById(R.id.listview_exercises);
         this.addExerciseButton = findViewById(R.id.button_addExercise);
@@ -93,7 +100,12 @@ public class WorkoutActivity extends AppCompatActivity {
         this.setVisibility();
     }
 
-    public void startWorkoutActivity(View view) {
+    public void startWorkoutActivity(View view){
+        if(Settings.getInstance().getCurrentClient() == null)
+        {
+            Log.d("debug","No client chosen");
+            return;
+        }
         Intent mIntent = new Intent(this,WorkoutActivity.class);
         startActivity(mIntent);
     }
@@ -105,6 +117,11 @@ public class WorkoutActivity extends AppCompatActivity {
     }
 
     public void startHistoryActivity(View view) {
+        if(Settings.getInstance().getCurrentClient() == null)
+        {
+            Log.d("debug","No client chosen");
+            return;
+        }
         Intent mIntent = new Intent(this,HistoryActivity.class);
         startActivity(mIntent);
     }
@@ -128,7 +145,6 @@ public class WorkoutActivity extends AppCompatActivity {
             weight = Integer.parseInt(editTextWeight.getText().toString());
         }catch(Exception e)
         {
-            e.printStackTrace();
             Log.d("debug","Cant add exercise");
             Log.d("debug",e.toString());
             return;

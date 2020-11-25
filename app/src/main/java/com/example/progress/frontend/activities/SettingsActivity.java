@@ -4,10 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.progress.R;
+import com.example.progress.logic.Exceptions.NoClientException;
 import com.example.progress.logic.settings.Settings;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -32,6 +34,11 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void startWorkoutActivity(View view) {
+        if(Settings.getInstance().getCurrentClient() == null)
+        {
+            Log.d("debug","No client chosen");
+            return;
+        }
         Intent mIntent = new Intent(this,WorkoutActivity.class);
         startActivity(mIntent);
     }
@@ -42,7 +49,12 @@ public class SettingsActivity extends AppCompatActivity {
         startActivity(mIntent);
     }
 
-    public void startHistoryActivity(View view) {
+    public void startHistoryActivity(View view){
+        if(Settings.getInstance().getCurrentClient() == null)
+        {
+            Log.d("debug","No client chosen");
+            return;
+        }
         Intent mIntent = new Intent(this,HistoryActivity.class);
         startActivity(mIntent);
     }

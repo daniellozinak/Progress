@@ -6,11 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.progress.R;
 import com.example.progress.logic.Client;
+import com.example.progress.logic.Exceptions.NoClientException;
 import com.example.progress.logic.settings.Settings;
 
 import java.util.ArrayList;
@@ -51,7 +53,12 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-    public void startWorkoutActivity(View view) {
+    public void startWorkoutActivity(View view){
+        if(Settings.getInstance().getCurrentClient() == null)
+        {
+            Log.d("debug","No client chosen");
+            return;
+        }
         Intent mIntent = new Intent(this,WorkoutActivity.class);
         startActivity(mIntent);
     }
@@ -62,7 +69,12 @@ public class ProfileActivity extends AppCompatActivity {
         startActivity(mIntent);
     }
 
-    public void startHistoryActivity(View view) {
+    public void startHistoryActivity(View view){
+        if(Settings.getInstance().getCurrentClient() == null)
+        {
+            Log.d("debug","No client chosen");
+            return;
+        }
         Intent mIntent = new Intent(this,HistoryActivity.class);
         startActivity(mIntent);
     }

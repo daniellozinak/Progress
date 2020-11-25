@@ -35,6 +35,11 @@ public class Exercise extends Entity {
     }
 
     @Override
+    public boolean delete() {
+        return ExerciseTable.getInstance().deleteExercise(exerciseRow,Settings.getInstance().getHelper()) > 0;
+    }
+
+    @Override
     public String toString() {
         return exerciseRow.toString();
     }

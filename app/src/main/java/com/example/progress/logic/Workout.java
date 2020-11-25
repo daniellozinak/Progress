@@ -14,17 +14,20 @@ import com.example.progress.logic.settings.Settings;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Set;
 
 public class Workout extends Entity {
     private WorkoutRow workoutRow = null;
     private ArrayList<Exercise> exerciseList = null;
 
     //constructors
-    public Workout() {
+    public Workout()
+    {
         exerciseList = new ArrayList<>();
     }
 
-    public Workout(ClientRow clientRow, long start, String name) {
+    public Workout(ClientRow clientRow, long start, String name)
+    {
         workoutRow = new WorkoutRow(clientRow, start, name);
         exerciseList = new ArrayList<>();
     }
@@ -45,8 +48,8 @@ public class Workout extends Entity {
         return true;
     }
 
-    public boolean removeExercise(ExerciseRow exerciseRow) {
-        return exerciseList.remove(exerciseRow);
+    public boolean removeExercise(Exercise exercise) {
+        return exerciseList.remove(exercise);
     }
 
     public boolean removeExercise(int index) {
@@ -58,8 +61,6 @@ public class Workout extends Entity {
         return true;
     }
 
-    public long getDuration(){ return this.workoutRow.getEnd() - this.workoutRow.getStart();}
-
 
     //getters, setters
     public long getCurrentTime() {
@@ -67,6 +68,7 @@ public class Workout extends Entity {
         return (new Date().getTime() - this.workoutRow.getStart());
     }
 
+    public long getDuration(){ return this.workoutRow.getEnd() - this.workoutRow.getStart();}
 
     public String getWorkoutName() {
         assert (this.workoutRow != null);
@@ -106,6 +108,11 @@ public class Workout extends Entity {
     public boolean load(int id) {
         this.workoutRow = WorkoutTable.getInstance().findWorkout(id, Settings.getInstance().getHelper());
         return this.workoutRow != null;
+    }
+
+    @Override
+    public boolean delete() {
+        return WorkoutTable.getInstance().deleteWorkout(workoutRow,Settings.getInstance().getHelper()) > 0;
     }
 
     @Override

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ import com.example.progress.backend.row.WorkoutRow;
 import com.example.progress.backend.table.ClientTable;
 import com.example.progress.backend.table.ExerciseTable;
 import com.example.progress.backend.table.WorkoutTable;
+import com.example.progress.logic.Exceptions.NoClientException;
 import com.example.progress.logic.settings.Settings;
 import com.example.progress.logic.Client;
 
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<ClientRow> clients = clientInstance.findAllClients(dbHelper);
         ArrayList<WorkoutRow> allworkouts  =  workoutInstance.findAllWorkouts(dbHelper);
         ArrayList<ExerciseRow> exercises  =  exerciseInstance.findAllExercises(dbHelper);
+
     }
 
     @Override
@@ -66,7 +69,12 @@ public class MainActivity extends AppCompatActivity {
         logInfo.setText(logInfoText);
     }
 
-    public void startWorkoutActivity(View view) {
+    public void startWorkoutActivity(View view){
+        if(Settings.getInstance().getCurrentClient() == null)
+        {
+            Log.d("debug","No client chosen");
+            return;
+        }
         Intent mIntent = new Intent(this,WorkoutActivity.class);
         startActivity(mIntent);
     }
@@ -77,7 +85,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(mIntent);
     }
 
-    public void startHistoryActivity(View view) {
+    public void startHistoryActivity(View view){
+        if(Settings.getInstance().getCurrentClient() == null)
+        {
+            Log.d("debug","No client chosen");
+            return;
+        }
         Intent mIntent = new Intent(this,HistoryActivity.class);
         startActivity(mIntent);
     }
