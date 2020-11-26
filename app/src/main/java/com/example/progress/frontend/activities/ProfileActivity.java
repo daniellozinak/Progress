@@ -3,11 +3,15 @@ package com.example.progress.frontend.activities;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,8 +28,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     private ArrayList<Client> clients;
     private TextView logInfo;
-    private EditText editTextProfile;
-    private Button buttonCreateProfile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +50,6 @@ public class ProfileActivity extends AppCompatActivity {
         logInfo.setText(logInfoText);
     }
 
-    public void addProfile(View view) {
-        if(!this.createProfile(this.editTextProfile.getText().toString()))
-        {
-            Log.d("debug","Cant create profile");
-            return;
-        }
-    }
 
     public void showProfile(View view) {
         Intent mIntent = new Intent(this,ShowProfileActivity.class);
@@ -93,25 +88,12 @@ public class ProfileActivity extends AppCompatActivity {
         startActivity(mIntent);
     }
 
-    private boolean createProfile(String nickname)
-    {
-        if(nickname.equals(""))
-        {
-            Log.d("debug","No nickname set");
-            return false;
-        }
-        Client newClient = new Client(nickname);
-        return newClient.save();
-    }
 
     private void init()
     {
         logInfo = findViewById(R.id.text_logginInfo);
         String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getClientRow().getNickname() : "";
         logInfo.setText(logInfoText);
-
-        this.editTextProfile = findViewById(R.id.editText_nickname);
-        this.buttonCreateProfile = findViewById(R.id.button_createProfile);
     }
 
     private void setVisibility()
@@ -122,6 +104,7 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
     }
+
 
     public void textViewSwitch(View view) {
     }

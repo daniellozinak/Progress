@@ -7,6 +7,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,12 +20,15 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.example.progress.R;
 import com.example.progress.logic.Exceptions.NoClientException;
 import com.example.progress.logic.settings.Settings;
@@ -36,7 +41,7 @@ import java.util.TimeZone;
 
 public class WorkoutActivity extends AppCompatActivity {
 
-    private ListView listViewExercises;
+    private SwipeMenuListView listViewExercises;
     private Button addExerciseButton;
     private Button startButton;
     private Button endButton;
@@ -205,6 +210,11 @@ public class WorkoutActivity extends AppCompatActivity {
         this.viewSwitcherAppName = findViewById(R.id.switcher_appname);
         this.editTextWorkoutName = findViewById(R.id.editText_hidden_appname);
 
+        //global info
+        logInfo = findViewById(R.id.text_logginInfo);
+        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getClientRow().getNickname() : "";
+        logInfo.setText(logInfoText);
+
 
         //set adapter for exercise spinner
         this.exerciseTypeSpinner = findViewById(R.id.spinner_exerciseType);
@@ -215,23 +225,53 @@ public class WorkoutActivity extends AppCompatActivity {
 
         timerText.setText("Time: ");
 
+        //make a creator
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
 
-        //global info
-        logInfo = findViewById(R.id.text_logginInfo);
-        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getClientRow().getNickname() : "";
-        logInfo.setText(logInfoText);
-
-
-        //TODO 2: Add Gestures
-        listViewExercises.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Settings.getInstance().getCurrentClient().getCurrentWorkout().removeExercise(position);
-                adapter.notifyDataSetChanged();
+            public void create(SwipeMenu menu) {
+                // create "delete" item
+                SwipeMenuItem deleteItem = new SwipeMenuItem(
+                        getApplicationContext());
+                // set item background
+                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
+                // set item width
+                deleteItem.setWidth(180);
+                // set a icon
+                deleteItem.setIcon(R.drawable.ic_delete);
+                // add to menu
+                menu.addMenuItem(deleteItem);
+            }
+        };
+
+        // set creator
+        listViewExercises.setMenuCreator(creator);
+
+        listViewExercises.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                switch (index) {
+                    case 0:
+                        removeExercise(position);
+                        break;
+                }
+                // false : close the menu; true : not close the menu
+                return false;
             }
         });
 
         this.setVisibility();
+    }
+
+    private void removeExercise(int position)
+    {
+        if(!Settings.getInstance().getCurrentClient().getCurrentWorkout().removeExercise(position))
+        {
+            Log.d("debug","Cant remove Exercise");
+            return;
+        }
+        adapter.notifyDataSetChanged();
     }
 
     /**

@@ -59,7 +59,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/include" />
 
-    <ListView
+    <com.baoyz.swipemenulistview.SwipeMenuListView
         android:id="@+id/listview_exercises"
         android:layout_width="385dp"
         android:layout_height="307dp"

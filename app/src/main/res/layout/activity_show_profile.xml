@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:windowSoftInputMode="adjustNothing"
     tools:context=".frontend.activities.ShowProfileActivity">
 
     <include
@@ -11,10 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <ListView
+    <com.baoyz.swipemenulistview.SwipeMenuListView
         android:id="@+id/profileListView"
-        android:layout_width="334dp"
-        android:layout_height="556dp"
+        android:layout_width="wrap_content"
+        android:layout_height="289dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
@@ -26,7 +27,35 @@
         android:layout_marginTop="89dp"
         android:layout_marginEnd="39dp"
         android:layout_marginRight="39dp"
-        android:layout_marginBottom="85dp">
+        android:layout_marginBottom="353dp">
+    </com.baoyz.swipemenulistview.SwipeMenuListView>
 
-    </ListView>
+    <EditText
+        android:id="@+id/editText_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="99dp"
+        android:layout_marginRight="99dp"
+        android:layout_marginBottom="293dp"
+        android:ems="10"
+        android:hint="Nickname"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/button_createProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="157dp"
+        android:layout_marginRight="157dp"
+        android:layout_marginBottom="249dp"
+        android:backgroundTint="@color/black"
+        android:onClick="addProfile"
+        android:text="Create " />
+
 </RelativeLayout>

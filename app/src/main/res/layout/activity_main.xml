@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_rect"
+    android:windowSoftInputMode="adjustNothing"
     tools:context=".frontend.activities.MainActivity">
 
     <GridLayout

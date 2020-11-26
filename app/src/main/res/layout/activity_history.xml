@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.963" />
 
-    <ListView
+    <com.baoyz.swipemenulistview.SwipeMenuListView
         android:id="@+id/listView_history"
         android:layout_width="377dp"
         android:layout_height="508dp"
