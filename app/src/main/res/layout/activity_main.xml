@@ -63,22 +63,6 @@
     </GridLayout>
 
     <TextView
-        android:id="@+id/text_appname"
-        android:layout_width="407dp"
-        android:layout_height="80dp"
-        android:background="#212529"
-        android:text="Progress"
-        android:gravity="center"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:textSize="25dp"
-        android:fontFamily="casual"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/text_logginInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -87,6 +71,40 @@
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_appname" />
+
+    <ViewSwitcher
+        android:id="@+id/switcher_appname"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/text_appname"
+            android:layout_width="407dp"
+            android:layout_height="80dp"
+            android:background="#212529"
+            android:fontFamily="casual"
+            android:gravity="center"
+            android:onClick="textViewSwitch"
+            android:text="Progress"
+            android:textColor="@color/black"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/editText_hidden_appname"
+            android:layout_width="407dp"
+            android:layout_height="80dp"
+            android:background="#212529"
+            android:fontFamily="casual"
+            android:gravity="center"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            android:hint="WorkoutName" />
+    </ViewSwitcher>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

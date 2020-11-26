@@ -22,4 +22,32 @@
         android:onClick="showProfile"
         android:text="Select Profile" />
 
+    <EditText
+        android:id="@+id/editText_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="101dp"
+        android:layout_marginRight="101dp"
+        android:layout_marginBottom="344dp"
+        android:ems="10"
+        android:hint="Nickname"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/button_createProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="158dp"
+        android:layout_marginRight="158dp"
+        android:layout_marginBottom="274dp"
+        android:backgroundTint="@color/black"
+        android:onClick="addProfile"
+        android:text="Create " />
+
 </RelativeLayout>

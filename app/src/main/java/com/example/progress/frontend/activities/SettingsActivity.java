@@ -63,4 +63,7 @@ public class SettingsActivity extends AppCompatActivity {
         Intent mIntent = new Intent(this,SettingsActivity.class);
         startActivity(mIntent);
     }
+
+    public void textViewSwitch(View view) {
+    }
 }

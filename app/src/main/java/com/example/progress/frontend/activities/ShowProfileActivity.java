@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,6 +16,7 @@ import com.example.progress.R;
 import com.example.progress.backend.DatabaseHelper;
 import com.example.progress.backend.table.ClientTable;
 import com.example.progress.logic.Client;
+import com.example.progress.logic.settings.Settings;
 
 import java.util.ArrayList;
 
@@ -50,5 +52,39 @@ public class ShowProfileActivity extends AppCompatActivity {
 
         ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,clients);
         listView.setAdapter(adapter);
+    }
+
+    public void startWorkoutActivity(View view) {
+        if(Settings.getInstance().getCurrentClient() == null)
+        {
+            Log.d("debug","No client chosen");
+            return;
+        }
+        Intent mIntent = new Intent(this,WorkoutActivity.class);
+        startActivity(mIntent);
+    }
+
+    public void startProfileActivity(View view) {
+        Intent mIntent = new Intent(this,ProfileActivity.class);
+        mIntent.putExtra("Logged", Settings.getInstance().isClientLogged());
+        startActivity(mIntent);
+    }
+
+    public void startHistoryActivity(View view){
+        if(Settings.getInstance().getCurrentClient() == null)
+        {
+            Log.d("debug","No client chosen");
+            return;
+        }
+        Intent mIntent = new Intent(this,HistoryActivity.class);
+        startActivity(mIntent);
+    }
+
+    public void startSettingsActivity(View view) {
+        Intent mIntent = new Intent(this,SettingsActivity.class);
+        startActivity(mIntent);
+    }
+
+    public void textViewSwitch(View view) {
     }
 }

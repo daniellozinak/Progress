@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
         WorkoutTable workoutInstance   = WorkoutTable.getInstance();
         ExerciseTable exerciseInstance = ExerciseTable.getInstance();
 
-
         Settings.getInstance().setHelper(dbHelper);
         //set helper
 
@@ -99,4 +98,6 @@ public class MainActivity extends AppCompatActivity {
         Intent mIntent = new Intent(this,SettingsActivity.class);
         startActivity(mIntent);
     }
+
+    public void textViewSwitch(View view) { }
 }

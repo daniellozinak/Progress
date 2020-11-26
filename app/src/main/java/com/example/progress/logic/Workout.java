@@ -12,6 +12,7 @@ import com.example.progress.logic.settings.Settings;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TimeZone;
 
 public class Workout extends Entity {
     private WorkoutRow workoutRow = null;
@@ -52,7 +53,7 @@ public class Workout extends Entity {
      * @param exerciseName  Name of the Exercise
      * @param reps  Reps
      * @param weight  Weight [kg]
-     * @return
+     * @return True if added, False if not
      */
     public boolean addExercise(ExerciseType type, String exerciseName, int reps, int weight) {
         if (workoutRow == null) {
@@ -95,7 +96,10 @@ public class Workout extends Entity {
      */
     public long getCurrentTime() {
         assert (this.workoutRow != null);
-        return (new Date().getTime() - this.workoutRow.getStart());
+        SimpleDateFormat sdt = new SimpleDateFormat("HH:mm:ss");
+        sdt.setTimeZone(TimeZone.getTimeZone("GMT"));
+        long currentTimestamp = new Date().getTime();
+        return (currentTimestamp - this.workoutRow.getStart());
     }
 
     /**
@@ -180,6 +184,7 @@ public class Workout extends Entity {
     @Override
     public String toString() {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdt = new SimpleDateFormat("HH:mm:ss");
+        sdt.setTimeZone(TimeZone.getTimeZone("GMT"));
         return this.workoutRow.getName() + " date:[" + new Date(this.workoutRow.getStart()) + "] duration:[" + sdt.format(this.getDuration()) + "]";
     }
 }

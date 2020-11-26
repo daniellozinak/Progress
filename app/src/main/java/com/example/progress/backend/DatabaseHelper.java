@@ -12,7 +12,7 @@ import com.example.progress.backend.table.WorkoutTable;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_NAME = "Progress.db";
 
     /**
@@ -33,9 +33,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-//        if (newVersion > oldVersion) {
-//            db.execSQL("ALTER TABLE Exercise ADD COLUMN weight INTEGER DEFAULT 0");
-//        }
     }
 
 }

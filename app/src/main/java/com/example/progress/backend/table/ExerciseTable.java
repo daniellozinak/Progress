@@ -33,11 +33,11 @@ public class ExerciseTable {
 
     public static final String SQL_TABLE_CREATE = "CREATE TABLE " + SQL_TABLE_NAME + " ( " +
             SQL_COLUMN_EXERCISE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            SQL_COLUMN_WORKOUT_ID + " INTEGER, " +
             SQL_COLUMN_TYPE + " VARCHAR(30), " +
             SQL_COLUMN_NAME + " VARCHAR(30), " +
             SQL_COLUMN_REPS + " INTEGER," +
-            SQL_COLUMN_WEIGHT + "INTEGER" +
+            SQL_COLUMN_WEIGHT + " INTEGER," +
+            SQL_COLUMN_WORKOUT_ID + " INTEGER, " +
             "FOREIGN KEY(" + SQL_COLUMN_WORKOUT_ID + ") REFERENCES " + WorkoutTable.SQL_TABLE_NAME + " ( " + SQL_COLUMN_WORKOUT_ID + "))";
 
     /**

@@ -128,5 +128,6 @@ public class HistoryActivity extends AppCompatActivity {
         logInfo.setText(logInfoText);
     }
 
-
+    public void textViewSwitch(View view) {
+    }
 }
