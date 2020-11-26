@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -18,9 +17,6 @@ import com.example.progress.R;
 import com.example.progress.logic.Exceptions.NoClientException;
 import com.example.progress.logic.Workout;
 import com.example.progress.logic.settings.Settings;
-
-import java.util.ArrayList;
-import java.util.Set;
 
 public class HistoryActivity extends AppCompatActivity {
 
@@ -94,6 +90,7 @@ public class HistoryActivity extends AppCompatActivity {
 
         this.listViewHistory.setAdapter(this.workoutArrayAdapter);
 
+        //TODO Add gestures
         this.listViewHistory.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

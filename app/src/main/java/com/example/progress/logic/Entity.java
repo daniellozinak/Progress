@@ -1,5 +1,8 @@
 package com.example.progress.logic;
 
+/**
+ * Abstract class for Logic layer
+ */
 public abstract class Entity {
 
     /**
@@ -16,7 +19,7 @@ public abstract class Entity {
     public abstract boolean load(int id);
 
     /**
-     * Deletes Enetity from Database
+     * Deletes Entity from Database
      * @return true if Entity was deleted, false if not
      */
     public abstract boolean delete();

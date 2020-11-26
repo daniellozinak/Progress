@@ -1,7 +1,6 @@
 package com.example.progress.logic;
 
 import android.os.Build;
-import android.widget.ArrayAdapter;
 
 import androidx.annotation.RequiresApi;
 
@@ -17,25 +16,42 @@ public class Client extends Entity {
     private ClientRow clientRow;
     private Workout currentWorkout = null;
 
+    /**
+     * Client constructor
+     * @param nickname set as ClientRow nickname
+     */
     public Client(String nickname)
     {
         clientRow = new ClientRow(nickname);
     }
 
+    /**
+     * Client constructor
+     * @param client ClientRow instance, set as ClientRow
+     */
     public Client(ClientRow client)
     {
         this.clientRow = client;
     }
 
-
+    /**
+     * Starts new Workout
+     * @param start timestamp
+     * @param name Workout name
+     * @return True if Workout started, False if not
+     */
     public boolean startWorkout(long start,String name)
     {
         //creates new Workout object
-        assert(clientRow!=null);
+        if(clientRow == null) {return false;}
         currentWorkout = new Workout(this.clientRow,start,name);
         return true;
     }
 
+    /**
+     * Ends Workout
+     * @return True if Workout ended, False if not
+     */
     public boolean endWorkout()
     {
         if(currentWorkout.save())
@@ -48,24 +64,50 @@ public class Client extends Entity {
 
 
     //returns true if workout is happening right now
+
+    /**
+     *
+     * @return True if Workout is happening right now, False if not
+     */
     public boolean isCurrentWorkout() {return currentWorkout !=null;}
 
 
-    //getters, setters
+    /**
+     * ClientRow getter
+     * @return ClientRow instance
+     */
     public ClientRow getClientRow() {
         return clientRow;
     }
 
+    /**
+     * ClientRow setter
+     * @param clientRow set as ClientRow
+     */
     public void setClientRow(ClientRow clientRow) {
         this.clientRow = clientRow;
     }
 
+    /**
+     * Current Workout getter
+     * @return Current Workout instance
+     */
     public Workout getCurrentWorkout()
     {
         assert (currentWorkout!=null);
         return currentWorkout;
     }
 
+    /**
+     * Current Workout setter
+     * @param currentWorkout set as Current Workout
+     */
+    public void setCurrentWorkout(Workout currentWorkout) { this.currentWorkout = currentWorkout; }
+
+    /**
+     * Static Clients getter
+     * @return all Clients in the Database
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     public static ArrayList<Client> getAllClients()
     {
@@ -76,8 +118,10 @@ public class Client extends Entity {
         return clients;
     }
 
-    public void setCurrentWorkout(Workout currentWorkout) { this.currentWorkout = currentWorkout; }
-
+    /**
+     * Finished Workouts getter
+     * @return All Workouts that hs been finished so far
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     public ArrayList<Workout> getClientFinishedWorkouts()
     {
@@ -92,26 +136,42 @@ public class Client extends Entity {
         return toReturn;
     }
 
+    /**
+     * ToString
+     * @return ClientRow Nickname
+     */
     @Override
     public String toString() {
         return this.clientRow.getNickname();
     }
 
-    //Entity
+    /**
+     * Saves Client into the Database
+     * @return True if saved, False if not
+     */
     @Override
     public boolean save() {
-        assert(clientRow!=null);
+        if(clientRow == null) {return false;}
         return ClientTable.getInstance().insertClient(clientRow,Settings.getInstance().getHelper());
     }
 
+    /**
+     * Loads Client from Database
+     * @param id ID of Client
+     * @return True if loaded, False if not
+     */
     @Override
     public boolean load(int id) {
         clientRow = ClientTable.getInstance().findClient(id, Settings.getInstance().getHelper());
         return clientRow !=null;
     }
 
+    /**
+     * Deletes Client
+     * @return True if deleted, False if not
+     */
     @Override
     public boolean delete() {
-        return ClientTable.getInstance().deleteClient(clientRow,Settings.getInstance().getHelper()) > 0;
+        return ClientTable.getInstance().deleteClient(clientRow,Settings.getInstance().getHelper());
     }
 }

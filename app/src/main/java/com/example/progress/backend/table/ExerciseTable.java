@@ -11,6 +11,9 @@ import com.example.progress.backend.row.WorkoutRow;
 
 import java.util.ArrayList;
 
+/**
+ * Singleton class
+ */
 public class ExerciseTable {
     private static ExerciseTable instance;
     private ArrayList<ExerciseRow> cachedExercises;
@@ -37,6 +40,12 @@ public class ExerciseTable {
             SQL_COLUMN_WEIGHT + "INTEGER" +
             "FOREIGN KEY(" + SQL_COLUMN_WORKOUT_ID + ") REFERENCES " + WorkoutTable.SQL_TABLE_NAME + " ( " + SQL_COLUMN_WORKOUT_ID + "))";
 
+    /**
+     * Inserts ExerciseRow into the Database
+     * @param exerciseRow ExerciseRow instance
+     * @param helper DatabaseHelper instance
+     * @return True if inserted, False if not
+     */
     public boolean insertExercise(ExerciseRow exerciseRow, DatabaseHelper helper)
     {
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -55,6 +64,12 @@ public class ExerciseTable {
         return (id!=-1);
     }
 
+    /**
+     * Finds ExerciseRow in the Database
+     * @param exerciseID ExerciseRow ID
+     * @param helper DatabaseHelper instance
+     * @return ExerciseRow instance
+     */
     public ExerciseRow findExercise(int exerciseID,DatabaseHelper helper)
     {
         SQLiteDatabase database = helper.getReadableDatabase();
@@ -86,6 +101,11 @@ public class ExerciseTable {
         return exerciseRow;
     }
 
+    /**
+     * Finds all ExerciseRows in the Database
+     * @param helper DatabaseHelper instance
+     * @return All ExerciseRow instances
+     */
     public ArrayList<ExerciseRow> findAllExercises(DatabaseHelper helper)
     {
         //initialize array list
@@ -127,14 +147,23 @@ public class ExerciseTable {
         return toReturnArray;
     }
 
+    /**
+     * Deletes all ExerciseRows in the Database
+     * @param helper DatabaseHelper instance
+     */
     public void deleteExercises(DatabaseHelper helper)
     {
         SQLiteDatabase database = helper.getWritableDatabase();
         database.execSQL(ExerciseTable.SQL_DELETE_ALL);
     }
 
-
-    public int updateExercise(ExerciseRow exerciseRow,DatabaseHelper helper)
+    /**
+     * Updates ExerciseRow in the Database
+     * @param exerciseRow ExerciseRow instance
+     * @param helper DatabaseHelper instance
+     * @return True if updated, False if not
+     */
+    public boolean updateExercise(ExerciseRow exerciseRow,DatabaseHelper helper)
     {
         SQLiteDatabase database = helper.getWritableDatabase();
 
@@ -145,17 +174,29 @@ public class ExerciseTable {
         contentValues.put(ExerciseTable.SQL_COLUMN_REPS,exerciseRow.getReps());
 
         return database.update(ExerciseTable.SQL_TABLE_NAME,contentValues,
-                ExerciseTable.SQL_COLUMN_EXERCISE_ID + " = " + exerciseRow.getExerciseID(),null);
+                ExerciseTable.SQL_COLUMN_EXERCISE_ID + " = " + exerciseRow.getExerciseID(),null) == 1;
     }
 
-    public int deleteExercise(ExerciseRow exerciseRow,DatabaseHelper helper)
+    /**
+     * Deletes ExerciseRow from the Databse
+     * @param exerciseRow ExerciseRow instance
+     * @param helper DatabaseHelper instance
+     * @return True if deleted, False if not
+     */
+    public boolean deleteExercise(ExerciseRow exerciseRow,DatabaseHelper helper)
     {
         SQLiteDatabase database = helper.getWritableDatabase();
 
         return database.delete(ExerciseTable.SQL_TABLE_NAME,
-                ExerciseTable.SQL_COLUMN_EXERCISE_ID + " = " + exerciseRow.getExerciseID(),null);
+                ExerciseTable.SQL_COLUMN_EXERCISE_ID + " = " + exerciseRow.getExerciseID(),null) == 1;
     }
 
+    /**
+     * Deletes WorkoutRow ExerciseRows
+     * @param workoutRow WorkoutRow instance
+     * @param helper DatabaseHelper instance
+     * @return number of rows effected
+     */
     public int deleteWorkoutExercise(WorkoutRow workoutRow,DatabaseHelper helper)
     {
         SQLiteDatabase database = helper.getWritableDatabase();
@@ -164,12 +205,18 @@ public class ExerciseTable {
                 WorkoutTable.SQL_COLUMN_WORKOUT_ID + " = " + workoutRow.getWorkoutID(),null);
     }
 
-    //singleton stuff
+    /**
+     * ExerciseTable constructor
+     */
     private ExerciseTable()
     {
         this.cachedExercises = new ArrayList<ExerciseRow>();
     }
 
+    /**
+     * ExerciseTable instance getter
+     * @return ExerciseTable static instance
+     */
     public static ExerciseTable getInstance()
     {
         if(instance == null)
@@ -179,6 +226,11 @@ public class ExerciseTable {
         return instance;
     }
 
+    /**
+     * Finds last ID inserted into the Database
+     * @param helper DatabaseHelper instance
+     * @return Last ID inserted
+     */
     private  int getLastID(DatabaseHelper helper) {
         SQLiteDatabase database = helper.getWritableDatabase();
         final String MY_QUERY = "SELECT last_insert_rowid()";

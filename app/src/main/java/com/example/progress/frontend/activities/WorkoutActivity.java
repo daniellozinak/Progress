@@ -2,6 +2,7 @@ package com.example.progress.frontend.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -37,6 +38,7 @@ public class WorkoutActivity extends AppCompatActivity {
     private EditText editTextExerciseName;
     private EditText editTextReps;
     private EditText editTextWeight;
+    private TextView workoutName;
     ArrayAdapter<Exercise> adapter;
 
     @Override
@@ -71,6 +73,7 @@ public class WorkoutActivity extends AppCompatActivity {
         this.editTextExerciseName = findViewById(R.id.editText_exerciseName);
         this.editTextReps = findViewById(R.id.editText_reps);
         this.editTextWeight = findViewById(R.id.editText_weight);
+        this.workoutName = findViewById(R.id.text_appname);
 
         //set adapter for exercise spinner
         this.exerciseTypeSpinner = findViewById(R.id.spinner_exerciseType);
@@ -179,12 +182,15 @@ public class WorkoutActivity extends AppCompatActivity {
         this.adapter = new ArrayAdapter<Exercise>(this,android.R.layout.simple_list_item_1,Settings.getInstance().getCurrentClient().getCurrentWorkout().getExerciseList());
         listViewExercises.setAdapter(adapter);
 
+        this.workoutName.setText(Settings.getInstance().getCurrentClient().getCurrentWorkout().getWorkoutName());
+
         Toast.makeText(getApplicationContext(), "Workout started", Toast.LENGTH_SHORT).show();
         Log.d("debug","Workout started");
         this.runTimer();
         this.setVisibility();
     }
 
+    @SuppressLint("SetTextI18n")
     public void endWorkout(View view) {
         if(Settings.getInstance().getCurrentClient() == null)
         {
@@ -204,6 +210,8 @@ public class WorkoutActivity extends AppCompatActivity {
         //clear adapter and notify
         this.adapter.clear();
         this.adapter.notifyDataSetChanged();
+
+        this.workoutName.setText("Progress");
 
         Toast.makeText(getApplicationContext(), "Workout ended", Toast.LENGTH_SHORT).show();
         Log.d("debug","Workout ended");

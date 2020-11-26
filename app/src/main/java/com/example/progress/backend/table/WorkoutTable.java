@@ -10,6 +10,9 @@ import com.example.progress.backend.row.WorkoutRow;
 
 import java.util.ArrayList;
 
+/**
+ * Singleton class
+ */
 public class WorkoutTable {
     private static WorkoutTable instance;
     private ArrayList<WorkoutRow> cachedWorkoutRows;
@@ -43,7 +46,12 @@ public class WorkoutTable {
             "FOREIGN KEY(" + SQL_COLUMN_CLIENT_ID + ") REFERENCES " + ClientTable.SQL_TABLE_NAME + "(" + SQL_COLUMN_CLIENT_ID + "))";
 
 
-    //db
+    /**
+     * Inserts WorkoutRow into the Database
+     * @param workoutRow WorkoutRow instance
+     * @param helper DatabaseHelper instance
+     * @return True if inserted, False if not
+     */
     public boolean insertWorkout(WorkoutRow workoutRow, DatabaseHelper helper)
     {
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -61,6 +69,12 @@ public class WorkoutTable {
         return (id!=-1);
     }
 
+    /**
+     * Finds WorkoutRow in the Database
+     * @param workoutID WorkoutRow ID
+     * @param helper DatabaseHelper instance
+     * @return WorkoutRow instance
+     */
     public WorkoutRow findWorkout(int workoutID,DatabaseHelper helper)
     {
         SQLiteDatabase database = helper.getReadableDatabase();
@@ -81,13 +95,20 @@ public class WorkoutTable {
                 workoutRow = new WorkoutRow(client,start,end,name);
                 workoutRow.setWorkoutID(workoutID);
             }
-        }finally {
+        }
+        finally {
             cursor.close();
         }
 
         return workoutRow;
     }
 
+    /**
+     * Finds all WorkoutRows for set ClientRow
+     * @param clientRow ClientRow instance
+     * @param helper DatabaseHelper instance
+     * @return ClientRow WorkoutRows
+     */
     public ArrayList<WorkoutRow> findClientWorkouts(ClientRow clientRow,DatabaseHelper helper)
     {
         //initialize array list
@@ -128,6 +149,11 @@ public class WorkoutTable {
         return toReturnArray;
     }
 
+    /**
+     * Finds all WorkoutRows in the Database
+     * @param helper DatabaseHelper instance
+     * @return All WorkoutRows
+     */
     public ArrayList<WorkoutRow> findAllWorkouts(DatabaseHelper helper)
     {
         //initialize array list
@@ -169,7 +195,13 @@ public class WorkoutTable {
         return toReturnArray;
     }
 
-    public int updateWorkout(WorkoutRow workoutRow,DatabaseHelper helper)
+    /**
+     * Updates WorkoutRow in the Database
+     * @param workoutRow WorkoutRow instance
+     * @param helper DatabaseHelper instance
+     * @return True if updated, False if not
+     */
+    public boolean updateWorkout(WorkoutRow workoutRow,DatabaseHelper helper)
     {
         SQLiteDatabase database = helper.getWritableDatabase();
 
@@ -181,10 +213,16 @@ public class WorkoutTable {
         contentValues.put(WorkoutTable.SQL_COLUMN_END, workoutRow.getEnd());
 
         return database.update(WorkoutTable.SQL_TABLE_NAME,contentValues,
-                WorkoutTable.SQL_COLUMN_WORKOUT_ID + " = " + workoutRow.getWorkoutID(),null);
+                WorkoutTable.SQL_COLUMN_WORKOUT_ID + " = " + workoutRow.getWorkoutID(),null) == 1;
     }
 
-    public int deleteWorkout(WorkoutRow workoutRow,DatabaseHelper helper)
+    /**
+     * Deletes WorkoutRow from the Database
+     * @param workoutRow WorkoutRow instance
+     * @param helper DatabaseHelper instance
+     * @return True if deleted, False if not
+     */
+    public boolean deleteWorkout(WorkoutRow workoutRow,DatabaseHelper helper)
     {
         SQLiteDatabase database = helper.getWritableDatabase();
 
@@ -192,9 +230,15 @@ public class WorkoutTable {
         exerciseTable.deleteWorkoutExercise(workoutRow,helper);
 
         return database.delete(WorkoutTable.SQL_TABLE_NAME,
-                WorkoutTable.SQL_COLUMN_WORKOUT_ID + " = " + workoutRow.getWorkoutID(),null);
+                WorkoutTable.SQL_COLUMN_WORKOUT_ID + " = " + workoutRow.getWorkoutID(),null) == 1;
     }
 
+    /**
+     * Deletes ClientRow WorkoutRows
+     * @param clientRow ClientRow instance
+     * @param helper DatabaseHelper instance
+     * @return number of rows effected
+     */
     public int deleteClientWorkout(ClientRow clientRow,DatabaseHelper helper)
     {
         SQLiteDatabase database = helper.getWritableDatabase();
@@ -211,12 +255,18 @@ public class WorkoutTable {
                 ClientTable.SQL_COLUMN_CLIENT_ID + " = " + clientRow.getClientID(),null);
     }
 
-    //singleton stuff
+    /**
+     * WorkoutTable constructor
+     */
     private WorkoutTable()
     {
         cachedWorkoutRows = new ArrayList<WorkoutRow>();
     }
 
+    /**
+     * WorkoutTable instance getter
+     * @return WorkoutTable static instance
+     */
     public static WorkoutTable getInstance()
     {
         if(instance == null)
@@ -226,6 +276,11 @@ public class WorkoutTable {
         return instance;
     }
 
+    /**
+     * Finds last ID inserted into the Database
+     * @param helper DatabaseHelper instance
+     * @return Last ID inserted
+     */
     private  int getLastID(DatabaseHelper helper) {
         SQLiteDatabase database = helper.getWritableDatabase();
         final String MY_QUERY = "SELECT last_insert_rowid()";

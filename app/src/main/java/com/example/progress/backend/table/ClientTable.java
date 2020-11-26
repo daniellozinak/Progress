@@ -12,7 +12,9 @@ import com.example.progress.backend.row.WorkoutRow;
 import java.util.ArrayList;
 import java.util.zip.CheckedOutputStream;
 
-//singletion pattern
+/**
+ * Singleton class
+ */
 public class ClientTable {
 
     private static ClientTable instance = null;
@@ -24,7 +26,6 @@ public class ClientTable {
     public static final String SQL_COLUMN_NICKNAME = "nickname";
     public static final String SQL_TABLE_CREATE = "CREATE TABLE " + SQL_TABLE_NAME + "("
             + SQL_COLUMN_CLIENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + SQL_COLUMN_NICKNAME + " VARCHAR(30))";
-
     public static final String SQL_QUERY_ALL = "SELECT * FROM " + SQL_TABLE_NAME;
     public static final String SQL_DELETE_ALL = "DELETE  FROM " + SQL_TABLE_NAME;
     public static final String SQL_QUERY_ONE_BY_ID = "SELECT * FROM " + SQL_TABLE_NAME + " WHERE " + SQL_COLUMN_CLIENT_ID + " = ";
@@ -32,7 +33,12 @@ public class ClientTable {
     public static final int NAME_LIMIT = 30;
 
 
-    //db
+    /**
+     * Inserts Client into the Database
+     * @param clientRow ClientRow instance
+     * @param helper DatabaseHelper instance
+     * @return  True if inserted, False if not
+     */
     public boolean insertClient(ClientRow clientRow, DatabaseHelper helper)
     {
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -47,6 +53,12 @@ public class ClientTable {
         return (id!=-1);
     }
 
+    /**
+     * Finds ClientRow in the Database
+     * @param clientID ClientRow ID
+     * @param helper DatabaseHelper instance
+     * @return  ClientRow instance
+     */
     public ClientRow findClient(int clientID, DatabaseHelper helper)
     {
         SQLiteDatabase database = helper.getReadableDatabase();
@@ -69,6 +81,10 @@ public class ClientTable {
         return clientRow;
     }
 
+    /**
+     * Deletes all ClientRows from the Database
+     * @param helper DatabaseHelper instance
+     */
     public void deleteClients(DatabaseHelper helper)
     {
         SQLiteDatabase db = helper.getWritableDatabase();
@@ -77,6 +93,11 @@ public class ClientTable {
         db.execSQL(ExerciseTable.SQL_DELETE_ALL);
     }
 
+    /**
+     * Finds all ClientRows in the Database
+     * @param helper DatabaseHelper instance
+     * @return  all ClientRows
+     */
     public ArrayList<ClientRow> findAllClients(DatabaseHelper helper)
     {
         //initialize array list
@@ -105,7 +126,13 @@ public class ClientTable {
         return toReturnArray;
     }
 
-    public int updateClient(ClientRow clientRow,DatabaseHelper helper)
+    /**
+     * Updates ClientRow in the Database
+     * @param clientRow ClientRow instance
+     * @param helper DatabaseHelper instance
+     * @return  True if updated, False if not
+     */
+    public boolean updateClient(ClientRow clientRow,DatabaseHelper helper)
     {
         SQLiteDatabase database = helper.getWritableDatabase();
 
@@ -115,10 +142,16 @@ public class ClientTable {
 
 
         return database.update(ClientTable.SQL_TABLE_NAME,contentValues,
-                ClientTable.SQL_COLUMN_CLIENT_ID+ " = " + clientRow.getClientID(),null);
+                ClientTable.SQL_COLUMN_CLIENT_ID+ " = " + clientRow.getClientID(),null) == 1;
     }
 
-    public int deleteClient(ClientRow clientRow,DatabaseHelper helper)
+    /**
+     * Deletes ClientRow in the Database
+     * @param clientRow ClientRow instance
+     * @param helper DatabaseHelper instance
+     * @return  True if deleted, False if not
+     */
+    public boolean deleteClient(ClientRow clientRow,DatabaseHelper helper)
     {
         SQLiteDatabase database = helper.getWritableDatabase();
         WorkoutTable workoutInstance   = WorkoutTable.getInstance();
@@ -126,15 +159,21 @@ public class ClientTable {
         workoutInstance.deleteClientWorkout(clientRow,helper);
 
         return database.delete(ClientTable.SQL_TABLE_NAME,
-                ClientTable.SQL_COLUMN_CLIENT_ID+ " = " + clientRow.getClientID(),null);
+                ClientTable.SQL_COLUMN_CLIENT_ID+ " = " + clientRow.getClientID(),null) == 1;
     }
 
 
-    //singleton stuff
+    /**
+     * ClientTable constructor
+     */
     private ClientTable() {
         cachedClients = new ArrayList<ClientRow>();
     }
 
+    /**
+     *  ClientTable instance getter
+     * @return ClientTable static instance
+     */
     public static ClientTable getInstance()
     {
         if(instance == null)
@@ -144,6 +183,11 @@ public class ClientTable {
         return instance;
     }
 
+    /**
+     * Finds last ID inserted into the Database
+     * @param helper DatabaseHelper instance
+     * @return Last ID inserted
+     */
     private  int getLastID(DatabaseHelper helper) {
         SQLiteDatabase database = helper.getWritableDatabase();
         final String MY_QUERY = "SELECT last_insert_rowid()";
