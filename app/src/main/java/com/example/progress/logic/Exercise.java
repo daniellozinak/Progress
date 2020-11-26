@@ -21,6 +21,15 @@ public class Exercise extends Entity {
     }
 
     /**
+     * Exercise constructor
+     * @param exerciseRow ExerciseRow instance
+     */
+    public Exercise(ExerciseRow exerciseRow)
+    {
+        this.exerciseRow = exerciseRow;
+    }
+
+    /**
      * ExerciseRow getter
      * @return ExerciseRow instance
      */

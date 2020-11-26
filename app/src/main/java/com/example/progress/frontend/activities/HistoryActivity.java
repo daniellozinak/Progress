@@ -20,6 +20,7 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.example.progress.R;
+import com.example.progress.frontend.activities.detail.WorkoutDetail;
 import com.example.progress.logic.Exceptions.NoClientException;
 import com.example.progress.logic.Workout;
 import com.example.progress.logic.settings.Settings;
@@ -153,10 +154,15 @@ public class HistoryActivity extends AppCompatActivity {
         });
     }
 
-    //TODO: Activity for given workout
+    //TODO: Add Pening Intent
     private void chooseWorkout(int position)
     {
-
+        try{
+            Workout workout = (Workout)this.workoutArrayAdapter.getItem(position);
+            Intent intent = new Intent(this, WorkoutDetail.class);
+            intent.putExtra("workoutID",workout.getWorkoutRow().getWorkoutID());
+            startActivity(intent);
+        }catch (Exception e) {}
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

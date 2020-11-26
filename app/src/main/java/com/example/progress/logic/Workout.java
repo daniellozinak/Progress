@@ -5,7 +5,9 @@ import android.annotation.SuppressLint;
 import android.util.Log;
 
 import com.example.progress.backend.row.ClientRow;
+import com.example.progress.backend.row.ExerciseRow;
 import com.example.progress.backend.row.WorkoutRow;
+import com.example.progress.backend.table.ExerciseTable;
 import com.example.progress.backend.table.WorkoutTable;
 import com.example.progress.logic.settings.Settings;
 
@@ -131,7 +133,12 @@ public class Workout extends Entity {
      * @return ExerciseList instance
      */
     public ArrayList<Exercise> getExerciseList() {
-        return exerciseList;
+        ArrayList<Exercise> toReturn = new ArrayList<>();
+        for(ExerciseRow exerciseRow : ExerciseTable.getInstance().findWorkoutExercises(workoutRow,Settings.getInstance().getHelper()))
+        {
+            toReturn.add(new Exercise(exerciseRow));
+        }
+        return toReturn;
     }
 
     /**
@@ -153,7 +160,6 @@ public class Workout extends Entity {
                 return false;
             }
         }
-
         return true;
     }
 

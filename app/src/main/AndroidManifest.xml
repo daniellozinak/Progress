@@ -9,18 +9,30 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Progress">
-        <activity android:name=".frontend.activities.SettingsActivity" android:windowSoftInputMode="adjustNothing"  />
-        <activity android:name=".frontend.activities.ShowProfileActivity" android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".frontend.activities.ProfileActivity" android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".frontend.activities.HistoryActivity" android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".frontend.activities.WorkoutActivity" android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".frontend.activities.MainActivity" android:windowSoftInputMode="adjustNothing">
+        <activity android:name=".frontend.activities.detail.WorkoutDetail"></activity>
+        <activity
+            android:name=".frontend.activities.SettingsActivity"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".frontend.activities.ShowProfileActivity"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".frontend.activities.ProfileActivity"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".frontend.activities.HistoryActivity"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".frontend.activities.WorkoutActivity"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity
+            android:name=".frontend.activities.MainActivity"
+            android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
     </application>
 

@@ -28,6 +28,7 @@ public class ExerciseTable {
     public static final String SQL_COLUMN_WEIGHT        = "weight";
 
     public static final String SQL_QUERY_ALL = "SELECT * FROM " + SQL_TABLE_NAME;
+    public static final String SQL_QUERY_BY_WORKOUT = "SELECT * FROM " + SQL_TABLE_NAME + " WHERE " + SQL_COLUMN_WORKOUT_ID + " = ";
     public static final String SQL_QUERY_ONE_BY_ID = "SELECT * FROM " + SQL_TABLE_NAME + " WHERE " + SQL_COLUMN_EXERCISE_ID + " = ";
     public static final String SQL_DELETE_ALL = "DELETE FROM " + SQL_TABLE_NAME;
 
@@ -100,6 +101,55 @@ public class ExerciseTable {
 
         return exerciseRow;
     }
+
+
+    /**
+     * Finds all ExerciseRows for set WorkoutRow
+     * @param workoutRow WorkoutRow instance
+     * @param helper DatabaseHelper instance
+     * @return WorkoutRow ExerciseRows
+     */
+    public ArrayList<ExerciseRow> findWorkoutExercises(WorkoutRow workoutRow,DatabaseHelper helper)
+    {
+        //initialize array list
+        ArrayList<ExerciseRow> toReturnArray  = new ArrayList<ExerciseRow>();
+
+        //get instance of database
+        SQLiteDatabase database = helper.getReadableDatabase();
+        Cursor cursor = null;
+
+        try {
+            //create cursor
+            cursor = database.rawQuery(ExerciseTable.SQL_QUERY_BY_WORKOUT + workoutRow.getWorkoutID(), null);
+            cursor.moveToFirst();
+
+            //loop trough
+            while (!cursor.isAfterLast()) {
+                //get attributes
+                int exerciseID = cursor.getInt(cursor.getColumnIndex(ExerciseTable.SQL_COLUMN_EXERCISE_ID));
+                int workoutID  = cursor.getInt(cursor.getColumnIndex(WorkoutTable.SQL_COLUMN_WORKOUT_ID));
+                String type    = cursor.getString(cursor.getColumnIndex(ExerciseTable.SQL_COLUMN_TYPE));
+                String name    = cursor.getString(cursor.getColumnIndex(ExerciseTable.SQL_COLUMN_NAME));
+                int reps       = cursor.getInt(cursor.getColumnIndex(ExerciseTable.SQL_COLUMN_REPS));
+                int weight     = cursor.getInt(cursor.getColumnIndex(ExerciseTable.SQL_COLUMN_WEIGHT));
+
+                WorkoutTable instance = WorkoutTable.getInstance();
+                WorkoutRow foundWorkoutRow = instance.findWorkout(workoutID,helper);
+
+                //create and store client
+                ExerciseRow exerciseRow = new ExerciseRow(exerciseID,foundWorkoutRow,type,name,reps,weight);
+                toReturnArray.add(exerciseRow);
+                cursor.moveToNext();
+            }
+        }
+        finally {
+            assert cursor != null;
+            cursor.close();
+        }
+        cachedExercises = toReturnArray;
+        return toReturnArray;
+    }
+
 
     /**
      * Finds all ExerciseRows in the Database

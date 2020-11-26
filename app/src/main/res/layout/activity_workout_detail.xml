@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".frontend.activities.detail.WorkoutDetail">
+
+
+    <include
+        android:id="@+id/include3"
+        layout="@layout/activity_main" />
+
+    <com.baoyz.swipemenulistview.SwipeMenuListView
+        android:id="@+id/listview_workoutdetail"
+        android:layout_width="380dp"
+        android:layout_height="471dp"
+        app:layout_constraintBottom_toBottomOf="@+id/include3"
+        app:layout_constraintTop_toTopOf="@+id/include3"
+        app:layout_constraintVertical_bias="0.7"
+        tools:layout_editor_absoluteX="16dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
