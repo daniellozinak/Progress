@@ -42,4 +42,7 @@ dependencies {
 
     //SwipeMenuListView
     compile 'com.baoyz.swipemenulistview:library:1.3.0'
+
+    //GraphView
+    implementation 'com.jjoe64:graphview:4.2.2'
 }

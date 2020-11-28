@@ -28,8 +28,6 @@ import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
-    private boolean isLogged = false;
-    private TextView logInfo = null;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -40,11 +38,6 @@ public class MainActivity extends AppCompatActivity {
 
         //init Database
         DatabaseHelper dbHelper = new DatabaseHelper(getApplicationContext());
-
-
-        logInfo = findViewById(R.id.text_logginInfo);
-        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getClientRow().getNickname() : "";
-        logInfo.setText(logInfoText);
 
 
         //debug stuff
@@ -64,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getClientRow().getNickname() : "";
-        logInfo.setText(logInfoText);
     }
 
     public void startWorkoutActivity(View view){

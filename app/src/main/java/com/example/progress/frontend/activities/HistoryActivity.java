@@ -27,7 +27,6 @@ import com.example.progress.logic.settings.Settings;
 
 public class HistoryActivity extends AppCompatActivity {
 
-    private TextView logInfo = null;
     private SwipeMenuListView listViewHistory = null;
     ArrayAdapter<Workout> workoutArrayAdapter = null;
 
@@ -49,8 +48,6 @@ public class HistoryActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getClientRow().getNickname() : "";
-        logInfo.setText(logInfoText);
     }
 
     public void startWorkoutActivity(View view)  {
@@ -90,10 +87,6 @@ public class HistoryActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void init() throws NoClientException {
         if(Settings.getInstance().getCurrentClient() == null) { throw new NoClientException(); }
-
-        logInfo = findViewById(R.id.text_logginInfo);
-        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getClientRow().getNickname() : "";
-        logInfo.setText(logInfoText);
 
         //set adapter for history ListView
         this.listViewHistory = findViewById(R.id.listView_history);

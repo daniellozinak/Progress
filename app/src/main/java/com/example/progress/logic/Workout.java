@@ -91,6 +91,20 @@ public class Workout extends Entity {
         return true;
     }
 
+    /**
+     * Calculates volume of the workout (reps x weight) in kg
+     * @return Volume in kg
+     */
+    public int getVolume()
+    {
+        int volume = 0;
+        for(Exercise exercise : this.getExerciseList())
+        {
+            ExerciseRow exerciseRow = exercise.getExerciseRow();
+            volume += (exerciseRow.getReps() * exerciseRow.getWeight());
+        }
+        return volume;
+    }
 
     /**
      *
@@ -129,7 +143,7 @@ public class Workout extends Entity {
     }
 
     /**
-     * ExerciseList getter
+     * ExerciseList getter, fetches Exercises from db
      * @return ExerciseList instance
      */
     public ArrayList<Exercise> getExerciseList() {
@@ -139,6 +153,14 @@ public class Workout extends Entity {
             toReturn.add(new Exercise(exerciseRow));
         }
         return toReturn;
+    }
+
+    /**
+     *  Current Exercises in memory
+     * @return ExerciseList instance
+     */
+    public ArrayList<Exercise> getExercises() {
+        return this.exerciseList;
     }
 
     /**

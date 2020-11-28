@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -40,13 +39,11 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class WorkoutActivity extends AppCompatActivity {
-
     private SwipeMenuListView listViewExercises;
     private Button addExerciseButton;
     private Button startButton;
     private Button endButton;
     private TextView timerText;
-    private TextView logInfo ;
     private Spinner exerciseTypeSpinner;
     private EditText editTextExerciseName;
     private EditText editTextReps;
@@ -71,8 +68,6 @@ public class WorkoutActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getClientRow().getNickname() : "";
-        logInfo.setText(logInfoText);
     }
 
     public void startWorkoutActivity(View view){
@@ -152,8 +147,39 @@ public class WorkoutActivity extends AppCompatActivity {
         }
 
         //set adapter
-        this.adapter = new ArrayAdapter<Exercise>(this,android.R.layout.simple_list_item_1,Settings.getInstance().getCurrentClient().getCurrentWorkout().getExerciseList());
+        this.adapter = new ArrayAdapter<Exercise>(this,android.R.layout.simple_list_item_1,Settings.getInstance().getCurrentClient().getCurrentWorkout().getExercises());
         listViewExercises.setAdapter(adapter);
+
+        //make a creator
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+            @Override
+            public void create(SwipeMenu menu) {
+                // create "delete" item
+                SwipeMenuItem deleteItem = new SwipeMenuItem(
+                        getApplicationContext());
+                // set item background
+                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
+                // set item width
+                deleteItem.setWidth(180);
+                // set a icon
+                deleteItem.setIcon(R.drawable.ic_delete);
+                // add to menu
+                menu.addMenuItem(deleteItem);
+            }
+        };
+
+        // set creator
+        listViewExercises.setMenuCreator(creator);
+
+        listViewExercises.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                if (index == 0) { removeExercise(position); }
+                // false : close the menu; true : not close the menu
+                return false;
+            }
+        });
 
         this.workoutName.setText(Settings.getInstance().getCurrentClient().getCurrentWorkout().getWorkoutName());
 
@@ -210,12 +236,6 @@ public class WorkoutActivity extends AppCompatActivity {
         this.viewSwitcherAppName = findViewById(R.id.switcher_appname);
         this.editTextWorkoutName = findViewById(R.id.editText_hidden_appname);
 
-        //global info
-        logInfo = findViewById(R.id.text_logginInfo);
-        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getClientRow().getNickname() : "";
-        logInfo.setText(logInfoText);
-
-
         //set adapter for exercise spinner
         this.exerciseTypeSpinner = findViewById(R.id.spinner_exerciseType);
         ExerciseType[] exerciseTypeArray = new ExerciseType[]{ExerciseType.Core,
@@ -224,42 +244,6 @@ public class WorkoutActivity extends AppCompatActivity {
         exerciseTypeSpinner.setAdapter(exerciseTypeAdapter);
 
         timerText.setText("Time: ");
-
-        //make a creator
-        SwipeMenuCreator creator = new SwipeMenuCreator() {
-
-            @Override
-            public void create(SwipeMenu menu) {
-                // create "delete" item
-                SwipeMenuItem deleteItem = new SwipeMenuItem(
-                        getApplicationContext());
-                // set item background
-                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
-                // set item width
-                deleteItem.setWidth(180);
-                // set a icon
-                deleteItem.setIcon(R.drawable.ic_delete);
-                // add to menu
-                menu.addMenuItem(deleteItem);
-            }
-        };
-
-        // set creator
-        listViewExercises.setMenuCreator(creator);
-
-        listViewExercises.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
-                switch (index) {
-                    case 0:
-                        removeExercise(position);
-                        break;
-                }
-                // false : close the menu; true : not close the menu
-                return false;
-            }
-        });
 
         this.setVisibility();
     }
@@ -360,6 +344,11 @@ public class WorkoutActivity extends AppCompatActivity {
                 handler.postDelayed(this, 100);
             }
         });
+    }
+
+    private void update()
+    {
+
     }
 
     /**

@@ -3,6 +3,7 @@ package com.example.progress.frontend.activities.detail;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -26,13 +27,18 @@ import com.example.progress.logic.Exercise;
 import com.example.progress.logic.Workout;
 import com.example.progress.logic.settings.Settings;
 
-public class WorkoutDetail extends AppCompatActivity {
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
-    private TextView logInfo = null;
+public class WorkoutDetail extends AppCompatActivity {
     private Workout currentWorkout = null;
     private TextView textViewAppName = null;
     private SwipeMenuListView listViewExercise = null;
     private ArrayAdapter adapter = null;
+    private TextView textViewVolume = null;
+    private TextView textViewStart = null;
+    private TextView textViewDuration = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +57,6 @@ public class WorkoutDetail extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getClientRow().getNickname() : "";
-        logInfo.setText(logInfoText);
 
         //load workout for index
         int index = getIntent().getIntExtra("workoutID",-1);
@@ -101,18 +105,24 @@ public class WorkoutDetail extends AppCompatActivity {
 
     private void init()
     {
-        logInfo = findViewById(R.id.text_logginInfo);
-        String logInfoText = (Settings.getInstance().isClientLogged())? Settings.getInstance().getCurrentClient().getClientRow().getNickname() : "";
-        logInfo.setText(logInfoText);
+        this.textViewStart = findViewById(R.id.textView_start);
+        this.textViewDuration = findViewById(R.id.textView_duration);
+        this.textViewVolume = findViewById(R.id.textView_volume);
+        this.textViewAppName = findViewById(R.id.text_appname);
+        this.listViewExercise = findViewById(R.id.listview_workoutdetail);
 
-        textViewAppName = findViewById(R.id.text_appname);
-        listViewExercise = findViewById(R.id.listview_workoutdetail);
+        //set DateFormat
+        @SuppressLint("SimpleDateFormat")
+        final SimpleDateFormat sdt = new SimpleDateFormat("HH:mm:ss");
+        sdt.setTimeZone(TimeZone.getTimeZone("GMT"));
+
         adapter = new ArrayAdapter<Exercise>(this,
                 android.R.layout.simple_list_item_1,this.currentWorkout.getExerciseList());
+        this.textViewVolume.setText("Volume : " + currentWorkout.getVolume() + " kg");
+        this.textViewDuration.setText("Duration: " + sdt.format(new Date(currentWorkout.getDuration())));
+        this.textViewStart.setText("Start: " + sdt.format(new Date(currentWorkout.getWorkoutRow().getStart())));
 
         listViewExercise.setAdapter(adapter);
-
-        Log.d("debug","size of exercises: " + this.currentWorkout.getExerciseList().size());
 
         SwipeMenuCreator creator = new SwipeMenuCreator() {
 
@@ -161,13 +171,15 @@ public class WorkoutDetail extends AppCompatActivity {
             return;
         }
         Log.d("debug",toDelete + " deleted");
-        updateListView();
+        update();
     }
 
-    private void updateListView()
+    private void update()
     {
         adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,this.currentWorkout.getExerciseList());
         listViewExercise.setAdapter(adapter);
+
+        this.textViewVolume.setText("Volume : " + currentWorkout.getVolume() + " kg");
     }
 
 }
