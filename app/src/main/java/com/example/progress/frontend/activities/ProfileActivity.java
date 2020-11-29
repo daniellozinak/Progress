@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -53,8 +54,11 @@ public class ProfileActivity extends AppCompatActivity {
         clients = Client.getAllClients();
         int index = getIntent().getIntExtra("ListPosition",-1);
 
-        if(index >= 0) { Settings.getInstance().setCurrentClient(clients.get(index)); }
-        //TODO: fix graph when where is one exercise only
+        if(index >= 0)
+        {
+            Settings.getInstance().setCurrentClient(clients.get(index));
+            Settings.getInstance().saveClient(this);
+        }
         setVisibility();
         setVolumeGraph();
         setFrequencyGraph();

@@ -34,6 +34,12 @@ public class Client extends Entity {
         this.clientRow = client;
     }
 
+    public Client(int id)
+    {
+        this.clientRow = ClientTable.getInstance()
+                .findClient(id,Settings.getInstance().getHelper());
+    }
+
     /**
      * Starts new Workout
      * @param start timestamp

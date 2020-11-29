@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         ExerciseTable exerciseInstance = ExerciseTable.getInstance();
 
         Settings.getInstance().setHelper(dbHelper);
+        Settings.getInstance().setDefaultClient(this);
         //set helper
 
         ArrayList<ClientRow> clients = clientInstance.findAllClients(dbHelper);

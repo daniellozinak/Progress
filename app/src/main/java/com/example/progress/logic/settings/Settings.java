@@ -1,6 +1,12 @@
 package com.example.progress.logic.settings;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
+
 import com.example.progress.backend.DatabaseHelper;
+import com.example.progress.backend.row.ClientRow;
 import com.example.progress.logic.Client;
 
 /**
@@ -8,6 +14,10 @@ import com.example.progress.logic.Client;
  */
 public class Settings {
     private static Settings instance = null;
+
+    private static SharedPreferences.Editor editor;
+    private static final String PREFS_NAME = "SHARED PREFS ACCOUNT";
+    private static final String CLIENT_KEY = "saved_client";
 
     /**
      * Settings constructor
@@ -17,6 +27,36 @@ public class Settings {
     private Client currentClient;
 
     private DatabaseHelper helper;
+
+    public void saveClient(Context context)
+    {
+        @SuppressLint("WrongConstant") SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_APPEND);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(CLIENT_KEY,currentClient.getClientRow().getClientID());
+        editor.apply();
+    }
+
+    public void setDefaultClient(Context context)
+    {
+        @SuppressLint("WrongConstant") SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_APPEND);
+
+        try{
+           int id =  sharedPreferences.getInt(CLIENT_KEY,-1);
+           if(id==-1)
+           {
+               Log.d("debug","Cant find client");
+               return;
+           }
+
+            Client client = new Client(id);
+            setCurrentClient(client);
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
 
     /**
      * Settings instance getter
