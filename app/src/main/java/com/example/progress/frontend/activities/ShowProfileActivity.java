@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -86,7 +85,7 @@ public class ShowProfileActivity extends AppCompatActivity {
     }
 
     public void startSettingsActivity(View view) {
-        Intent mIntent = new Intent(this,SettingsActivity.class);
+        Intent mIntent = new Intent(this, NoteActivity.class);
         startActivity(mIntent);
     }
 

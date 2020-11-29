@@ -10,10 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
@@ -77,7 +74,7 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     public void startSettingsActivity(View view) {
-        Intent mIntent = new Intent(this,SettingsActivity.class);
+        Intent mIntent = new Intent(this, NoteActivity.class);
         startActivity(mIntent);
     }
 

@@ -21,7 +21,7 @@ import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.example.progress.R;
 import com.example.progress.frontend.activities.HistoryActivity;
 import com.example.progress.frontend.activities.ProfileActivity;
-import com.example.progress.frontend.activities.SettingsActivity;
+import com.example.progress.frontend.activities.NoteActivity;
 import com.example.progress.frontend.activities.WorkoutActivity;
 import com.example.progress.logic.Exercise;
 import com.example.progress.logic.Workout;
@@ -99,7 +99,7 @@ public class WorkoutDetail extends AppCompatActivity {
     }
 
     public void startSettingsActivity(View view) {
-        Intent mIntent = new Intent(this, SettingsActivity.class);
+        Intent mIntent = new Intent(this, NoteActivity.class);
         startActivity(mIntent);
     }
 

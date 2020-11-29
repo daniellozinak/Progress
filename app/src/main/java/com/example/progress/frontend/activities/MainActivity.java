@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import com.example.progress.R;
 import com.example.progress.backend.DatabaseHelper;
@@ -19,12 +18,9 @@ import com.example.progress.backend.row.WorkoutRow;
 import com.example.progress.backend.table.ClientTable;
 import com.example.progress.backend.table.ExerciseTable;
 import com.example.progress.backend.table.WorkoutTable;
-import com.example.progress.logic.Exceptions.NoClientException;
 import com.example.progress.logic.settings.Settings;
-import com.example.progress.logic.Client;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -86,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void startSettingsActivity(View view) {
-        Intent mIntent = new Intent(this,SettingsActivity.class);
+        Intent mIntent = new Intent(this, NoteActivity.class);
         startActivity(mIntent);
     }
 

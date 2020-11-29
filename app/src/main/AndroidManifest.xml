@@ -11,7 +11,7 @@
         android:theme="@style/Theme.Progress">
         <activity android:name=".frontend.activities.detail.WorkoutDetail"></activity>
         <activity
-            android:name=".frontend.activities.SettingsActivity"
+            android:name=".frontend.activities.NoteActivity"
             android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name=".frontend.activities.ShowProfileActivity"

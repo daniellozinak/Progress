@@ -94,7 +94,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void startSettingsActivity(View view) {
-        Intent mIntent = new Intent(this,SettingsActivity.class);
+        Intent mIntent = new Intent(this, NoteActivity.class);
         startActivity(mIntent);
     }
 
