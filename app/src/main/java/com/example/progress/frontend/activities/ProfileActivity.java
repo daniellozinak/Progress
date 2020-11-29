@@ -137,15 +137,18 @@ public class ProfileActivity extends AppCompatActivity {
         BarGraphSeries<DataPoint> seriesVolume = new BarGraphSeries<>();
         int ClientWorkoutSize = Settings.getInstance().getCurrentClient().getClientFinishedWorkouts().size() - 1;
 
-        ClientWorkoutSize = Math.min(ClientWorkoutSize, WORKOUT_LIMIT);
-
-        for(int i = 0; i <= ClientWorkoutSize; i ++)
+        for(int i = 0; i <= WORKOUT_LIMIT; i ++)
         {
-            Workout workout = Settings.getInstance().getCurrentClient().getClientFinishedWorkouts().get(ClientWorkoutSize - i);
-            int volume = workout.getVolume();
-
+            int volume = 0;
+            if(i <= ClientWorkoutSize)
+            {
+                Workout workout = Settings.getInstance().getCurrentClient().getClientFinishedWorkouts().get(ClientWorkoutSize - i);
+                volume = workout.getVolume();
+            }
             seriesVolume.appendData(new DataPoint(i,volume),true,60);
         }
+
+
         seriesVolume.setSpacing(50);
         seriesVolume.setValueDependentColor(new ValueDependentColor<DataPoint>() {
             @Override
