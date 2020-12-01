@@ -61,6 +61,7 @@ public class WorkoutActivity extends AppCompatActivity {
         try {
             this.init();
         } catch (NoClientException e) {
+            Toast.makeText(this,"Choose a client first",Toast.LENGTH_SHORT).show();
             Log.d("debug","Choose a client first");
         }
     }
@@ -70,9 +71,14 @@ public class WorkoutActivity extends AppCompatActivity {
         super.onResume();
     }
 
+    /**
+     * Starts Workout activity
+     * @param view View instance
+     */
     public void startWorkoutActivity(View view){
         if(Settings.getInstance().getCurrentClient() == null)
         {
+            Toast.makeText(this,"No client chosen",Toast.LENGTH_SHORT).show();
             Log.d("debug","No client chosen");
             return;
         }
@@ -80,15 +86,24 @@ public class WorkoutActivity extends AppCompatActivity {
         startActivity(mIntent);
     }
 
+    /**
+     * Starts Profile activity
+     * @param view View instance
+     */
     public void startProfileActivity(View view) {
         Intent mIntent = new Intent(this,ProfileActivity.class);
         mIntent.putExtra("Logged",Settings.getInstance().isClientLogged());
         startActivity(mIntent);
     }
 
+    /**
+     * Starts History activity
+     * @param view View instance
+     */
     public void startHistoryActivity(View view) {
         if(Settings.getInstance().getCurrentClient() == null)
         {
+            Toast.makeText(this,"No client chosen",Toast.LENGTH_SHORT).show();
             Log.d("debug","No client chosen");
             return;
         }
@@ -96,12 +111,19 @@ public class WorkoutActivity extends AppCompatActivity {
         startActivity(mIntent);
     }
 
+    /**
+     * Starts Profile activity
+     * @param view View instance
+     */
     public void startSettingsActivity(View view) {
         Intent mIntent = new Intent(this, NoteActivity.class);
         startActivity(mIntent);
     }
 
-    //TODO : check if reps are not negative number
+    /**
+     * Adds exercise to Workout
+     * @param view View Instance
+     */
     public void addExercise(View view) {
 
         ExerciseType exerciseType = ExerciseType.Core;
@@ -114,8 +136,18 @@ public class WorkoutActivity extends AppCompatActivity {
             exerciseName = editTextExerciseName.getText().toString();
             reps = Integer.parseInt(editTextReps.getText().toString());
             weight = Integer.parseInt(editTextWeight.getText().toString());
-        }catch(Exception e)
+
+            if(reps <= 0)
+            {
+                Toast.makeText(this,"Invalid number of Reps",Toast.LENGTH_SHORT).show();
+                Log.d("debug","Invalid number of Reps");
+                return;
+            }
+
+        }
+        catch(Exception e)
         {
+            Toast.makeText(this,"Cant add exercise",Toast.LENGTH_SHORT).show();
             Log.d("debug","Cant add exercise");
             Log.d("debug",e.toString());
             return;
@@ -124,13 +156,19 @@ public class WorkoutActivity extends AppCompatActivity {
 
         if(!Settings.getInstance().getCurrentClient().getCurrentWorkout().addExercise(exerciseType,exerciseName,reps,weight))
         {
+            Toast.makeText(this,"Cant add exercise",Toast.LENGTH_SHORT).show();
             Log.d("debug","Can't add exercise");
             return;
         }
         this.adapter.notifyDataSetChanged();
     }
 
+    /**
+     * Starts new Workout
+     * @param view View instance
+     */
     public void startWorkout(View view) {
+        //check if there is a current client
         if(Settings.getInstance().getCurrentClient() == null)
         {
             Toast.makeText(getApplicationContext(), "You need to chose profile first", Toast.LENGTH_SHORT).show();
@@ -138,8 +176,8 @@ public class WorkoutActivity extends AppCompatActivity {
             return;
         }
 
-        //TODO add workout name
-        if(!Settings.getInstance().getCurrentClient().startWorkout(System.currentTimeMillis(),"My Workout"))
+
+        if(!Settings.getInstance().getCurrentClient().startWorkout(System.currentTimeMillis(),workoutName.toString()))
         {
             Toast.makeText(getApplicationContext(), "Can't start workout", Toast.LENGTH_SHORT).show();
             Log.d("debug","Can't start workout");
@@ -189,6 +227,10 @@ public class WorkoutActivity extends AppCompatActivity {
         this.setVisibility();
     }
 
+    /**
+     * Ends Current Workout
+     * @param view View instance
+     */
     @SuppressLint("SetTextI18n")
     public void endWorkout(View view) {
         if(Settings.getInstance().getCurrentClient() == null)
@@ -218,6 +260,10 @@ public class WorkoutActivity extends AppCompatActivity {
         this.setVisibility();
     }
 
+    /**
+     * Initializes Activity Elements
+     * @throws NoClientException
+     */
     @SuppressLint("SetTextI18n")
     private void init() throws NoClientException {
         if(Settings.getInstance().getCurrentClient() == null) { throw new NoClientException(); }
@@ -248,10 +294,15 @@ public class WorkoutActivity extends AppCompatActivity {
         this.setVisibility();
     }
 
+    /**
+     * Removes exercise from Current Workout
+     * @param position position
+     */
     private void removeExercise(int position)
     {
         if(!Settings.getInstance().getCurrentClient().getCurrentWorkout().removeExercise(position))
         {
+            Toast.makeText(this,"Cant remove Exercise",Toast.LENGTH_SHORT).show();
             Log.d("debug","Cant remove Exercise");
             return;
         }
@@ -324,7 +375,10 @@ public class WorkoutActivity extends AppCompatActivity {
         this.editTextReps.setVisibility(View.INVISIBLE);
         this.editTextWeight.setVisibility(View.INVISIBLE);
     }
-    
+
+    /**
+     * Start a timer, every x milliseconds calls Workout.getCurrentTime()
+     */
     private void runTimer()
     {
         final Handler handler = new Handler();
@@ -346,20 +400,16 @@ public class WorkoutActivity extends AppCompatActivity {
         });
     }
 
-    private void update()
-    {
-
-    }
 
     /**
      * Triggered by clicking outside of EditText editTextWorkoutName
-     * TODO: Toast
      */
     private void clickOutSide()
     {
         // if no input given, returns
         if(editTextWorkoutName.getText().equals(""))
         {
+            Toast.makeText(this,"Workout Name not set",Toast.LENGTH_SHORT).show();
             Log.d("debug","Workout Name not set");
             return;
         }
@@ -374,7 +424,6 @@ public class WorkoutActivity extends AppCompatActivity {
         this.workoutName.setText(newName);
         //show TextView
         this.viewSwitcherAppName.showPrevious();
-        Log.d("debug","Workout Name set: " + editTextWorkoutName.getText());
     }
 
     /**

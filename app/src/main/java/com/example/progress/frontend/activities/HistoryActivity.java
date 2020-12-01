@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
@@ -37,6 +38,7 @@ public class HistoryActivity extends AppCompatActivity {
         try {
             this.init();
         } catch (NoClientException e) {
+            Toast.makeText(this,"Choose a client first",Toast.LENGTH_SHORT).show();
             Log.d("debug","Choose a client first");
         }
     }
@@ -47,9 +49,14 @@ public class HistoryActivity extends AppCompatActivity {
         super.onResume();
     }
 
+    /**
+     * Starts Workout activity
+     * @param view View instance
+     */
     public void startWorkoutActivity(View view)  {
         if(Settings.getInstance().getCurrentClient() == null)
         {
+            Toast.makeText(this,"No client chosen",Toast.LENGTH_SHORT).show();
             Log.d("debug","No client chosen");
             return;
         }
@@ -57,15 +64,24 @@ public class HistoryActivity extends AppCompatActivity {
         startActivity(mIntent);
     }
 
+    /**
+     * Starts Profile activity
+     * @param view View instance
+     */
     public void startProfileActivity(View view) {
         Intent mIntent = new Intent(this,ProfileActivity.class);
         mIntent.putExtra("Logged",true);
         startActivity(mIntent);
     }
 
+    /**
+     * Starts History activity
+     * @param view View instance
+     */
     public void startHistoryActivity(View view){
         if(Settings.getInstance().getCurrentClient() == null)
         {
+            Toast.makeText(this,"No client chosen",Toast.LENGTH_SHORT).show();
             Log.d("debug","No client chosen");
             return;
         }
@@ -73,6 +89,10 @@ public class HistoryActivity extends AppCompatActivity {
         startActivity(mIntent);
     }
 
+    /**
+     * Starts Settings activity
+     * @param view View instance
+     */
     public void startSettingsActivity(View view) {
         Intent mIntent = new Intent(this, NoteActivity.class);
         startActivity(mIntent);
@@ -144,7 +164,10 @@ public class HistoryActivity extends AppCompatActivity {
         });
     }
 
-    //TODO: Add Pening Intent
+    /**
+     * Chooses Workout at position in ListView
+     * @param position
+     */
     private void chooseWorkout(int position)
     {
         try{
@@ -155,26 +178,28 @@ public class HistoryActivity extends AppCompatActivity {
         }catch (Exception e) {}
     }
 
+    /**
+     * Deletes Workout at position
+     * @param position
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void deleteWorkout(int position)
     {
-        Log.d("workout array size","Length before: " + Settings.getInstance().getCurrentClient().getClientFinishedWorkouts().size());
-
         if(Settings.getInstance().getCurrentClient().getClientFinishedWorkouts().size() <= position)
         {
+            Toast.makeText(this,"Cant delete this Workout",Toast.LENGTH_SHORT).show();
             Log.d("debug","Out of index");
             return;
         }
 
         if(!Settings.getInstance().getCurrentClient().getClientFinishedWorkouts().get(position).delete())
         {
+            Toast.makeText(this,"Cant delete this Workout",Toast.LENGTH_SHORT).show();
             Log.d("debug","Cant delete workout");
             return;
         }
         //refresh
         Settings.getInstance().getCurrentClient().getClientFinishedWorkouts();
-
-        Log.d("workout array size","Length after: " + Settings.getInstance().getCurrentClient().getClientFinishedWorkouts().size());
 
         //refresh content of list
 
@@ -185,6 +210,10 @@ public class HistoryActivity extends AppCompatActivity {
         workoutArrayAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Does nothing, purposefully
+     * @param view
+     */
     public void textViewSwitch(View view) {
     }
 }

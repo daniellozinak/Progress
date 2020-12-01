@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.progress.R;
 import com.example.progress.logic.Client;
@@ -27,7 +28,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Set;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -51,29 +51,42 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        //loads all clients from DB
         clients = Client.getAllClients();
+
+        //index from intent
         int index = getIntent().getIntExtra("ListPosition",-1);
 
+        //if index is valid
         if(index >= 0)
         {
+            //set current client and default client
             Settings.getInstance().setCurrentClient(clients.get(index));
-            Settings.getInstance().saveClient(this);
+            Settings.getInstance().saveDefaultClient(this);
         }
         setVisibility();
         setVolumeGraph();
         setFrequencyGraph();
     }
 
-
+    /**
+     * Starts Profile activity
+     * @param view View instance
+     */
     public void showProfile(View view) {
         Intent mIntent = new Intent(this,ShowProfileActivity.class);
         startActivity(mIntent);
     }
 
-
+    /**
+     * Starts Workout activity
+     * @param view View instance
+     */
     public void startWorkoutActivity(View view){
         if(Settings.getInstance().getCurrentClient() == null)
         {
+            Toast.makeText(this,"No client chosen",Toast.LENGTH_SHORT).show();
             Log.d("debug","No client chosen");
             return;
         }
@@ -81,15 +94,24 @@ public class ProfileActivity extends AppCompatActivity {
         startActivity(mIntent);
     }
 
+    /**
+     * Starts Profile activity
+     * @param view View instance
+     */
     public void startProfileActivity(View view) {
         Intent mIntent = new Intent(this,ProfileActivity.class);
         mIntent.putExtra("Logged",Settings.getInstance().isClientLogged());
         startActivity(mIntent);
     }
 
+    /**
+     * Starts History activity
+     * @param view View instance
+     */
     public void startHistoryActivity(View view){
         if(Settings.getInstance().getCurrentClient() == null)
         {
+            Toast.makeText(this,"No client chosen",Toast.LENGTH_SHORT).show();
             Log.d("debug","No client chosen");
             return;
         }
@@ -97,11 +119,18 @@ public class ProfileActivity extends AppCompatActivity {
         startActivity(mIntent);
     }
 
+    /**
+     * Starts History activity
+     * @param view View instance
+     */
     public void startSettingsActivity(View view) {
         Intent mIntent = new Intent(this, NoteActivity.class);
         startActivity(mIntent);
     }
 
+    /**
+     * Initializes Activity Elements
+     */
     private void init()
     {
         this.textViewLogged = findViewById(R.id.textView_logged);
@@ -114,6 +143,9 @@ public class ProfileActivity extends AppCompatActivity {
         this.setVisibility();
     }
 
+    /**
+     * sets visibility
+     */
     private void setVisibility()
     {
         if(Settings.getInstance().isClientLogged())
@@ -122,38 +154,60 @@ public class ProfileActivity extends AppCompatActivity {
             textViewLogged.setVisibility(View.VISIBLE);
             return;
         }
+
         textViewLogged.setText("No logged profile");
         textViewLogged.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * Does nothing, purposefully
+     * @param view
+     */
     public void textViewSwitch(View view) { }
 
+    /**
+     * Sets up volume graph
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void setVolumeGraph()
     {
         if(!Settings.getInstance().isClientLogged())
         {
+            Toast.makeText(this,"Client not logged",Toast.LENGTH_SHORT).show();
             Log.d("debug","Client not logged");
             return;
         }
 
-
+        //bar graph
         BarGraphSeries<DataPoint> seriesVolume = new BarGraphSeries<>();
+
+        //get all finished workouts
         int ClientWorkoutSize = Settings.getInstance().getCurrentClient().getClientFinishedWorkouts().size() - 1;
 
+        //loop trough last x workouts
         for(int i = 0; i <= WORKOUT_LIMIT; i ++)
         {
+            //set default value
             int volume = 0;
+
+            //if there is a workout at i-th position
             if(i <= ClientWorkoutSize)
             {
+                //get workout
                 Workout workout = Settings.getInstance().getCurrentClient().getClientFinishedWorkouts().get(ClientWorkoutSize - i);
+
+                //set volume
                 volume = workout.getVolume();
             }
+
+            //add data
             seriesVolume.appendData(new DataPoint(i,volume),true,60);
         }
 
-
+        //set spacing between bars
         seriesVolume.setSpacing(50);
+
+        //set color of bars
         seriesVolume.setValueDependentColor(new ValueDependentColor<DataPoint>() {
             @Override
             public int get(DataPoint data) {
@@ -161,6 +215,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
+        //set visual stuff
         volumeGraph.getGridLabelRenderer().setNumHorizontalLabels(ClientWorkoutSize);
         volumeGraph.getGridLabelRenderer().setTextSize(25f);
         volumeGraph.getGridLabelRenderer().reloadStyles();
@@ -175,32 +230,47 @@ public class ProfileActivity extends AppCompatActivity {
         volumeGraph.setTitle("Workout Volume Graph");
     }
 
+    /**
+     * sets up frequency graph
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void setFrequencyGraph()
     {
         if(!Settings.getInstance().isClientLogged())
         {
+            Toast.makeText(this,"Client not logged",Toast.LENGTH_SHORT).show();
             Log.d("debug","Client not logged");
             return;
         }
 
+        //bar graph
         BarGraphSeries<DataPoint> seriesFrequency = new BarGraphSeries<>();
-        Calendar calendarMax = daysTillSunday();
-        Calendar calendarMin = Calendar.getInstance();
 
+        //last value is this weeks Sunday
+        Calendar calendarMax = daysTillSunday();
         Date maxDate = calendarMax.getTime();
+
+        //first value is monday x weeks ago
+        Calendar calendarMin = Calendar.getInstance();
         calendarMin.setTime(maxDate);
         calendarMin.add(Calendar.DATE,-1 * DAY_LIMIT);
+
         Date minDate = calendarMin.getTime();
 
-        for(int i = 0; i < 5 ; i ++)
+        //loop trough x weeks
+        for(int i = 0; i < (DAY_LIMIT/7) ; i ++)
         {
+            //get day in week
             int dayInWeek = calendarMin.get(Calendar.DAY_OF_WEEK);
             int workoutsInWeek = 0;
+
+            //loop through days in week, (sunday = 1, saturday = 7)
             while(dayInWeek != 1)
             {
+                //loop trough workouts
                 for(Workout workout : Settings.getInstance().getCurrentClient().getClientFinishedWorkouts())
                 {
+                    //if workout day is the same as looped day
                     if(this.isSameDay(new Date(workout.getWorkoutRow().getStart()),calendarMin.getTime()))
                     {
                         workoutsInWeek++;
@@ -211,10 +281,15 @@ public class ProfileActivity extends AppCompatActivity {
                 calendarMin.add(Calendar.DATE,1);
                 dayInWeek = calendarMin.get(Calendar.DAY_OF_WEEK);
             }
+
+            //add data
             seriesFrequency.appendData(new DataPoint(calendarMin.getTime(),workoutsInWeek),false,5);
+
+            //add one day
             calendarMin.add(Calendar.DATE,1);
         }
 
+        //set visual stuff
         frequencyGraph.getGridLabelRenderer().setNumHorizontalLabels(5);
         frequencyGraph.getGridLabelRenderer().setTextSize(25f);
         frequencyGraph.getGridLabelRenderer().reloadStyles();
@@ -226,6 +301,7 @@ public class ProfileActivity extends AppCompatActivity {
         frequencyGraph.getViewport().setMaxY(7);
         frequencyGraph.getViewport().setXAxisBoundsManual(true);
 
+        //set color of BAR depending on how many workouts per week
         seriesFrequency.setValueDependentColor(new ValueDependentColor<DataPoint>() {
             @Override
             public int get(DataPoint data) {
@@ -264,6 +340,10 @@ public class ProfileActivity extends AppCompatActivity {
         frequencyGraph.setTitle("Workout Frequency Graph");
     }
 
+    /**
+     * Calculates how many das between today and this weeks sunday
+     * @return Calendar instance set at this weeks sunday
+     */
     private Calendar daysTillSunday()
     {
         //set today's date
@@ -288,6 +368,12 @@ public class ProfileActivity extends AppCompatActivity {
         return calendar;
     }
 
+    /**
+     * Checks if two dates are in the same day
+     * @param date1 First Date
+     * @param date2 Second Date
+     * @return True if dates are in the same day, False if not
+     */
     private boolean isSameDay(Date date1, Date date2)
     {
         long day1 = date1.getTime() / MILLISECONDS_PER_DAY;
@@ -296,16 +382,23 @@ public class ProfileActivity extends AppCompatActivity {
         return day1 == day2;
     }
 
+    /**
+     * Sets color depending on percentage data/max
+     * @param data  data
+     * @param max maximum value
+     * @return RGB Color
+     */
     private int setColor(int data,double max)
     {
         if(data <= 0) { return 0;}
         double divider = (double)data/max;
         int green = (int)(divider * 255.0);
-        //Color.rgb(255 - (data/7 * 255),(data/7 * 255),0)
+
         if(data > max)
         {
             green = 255;
         }
+
         return  Color.rgb(255 - green ,green,0);
     }
 }

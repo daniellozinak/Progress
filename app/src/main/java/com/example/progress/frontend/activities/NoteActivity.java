@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
@@ -38,6 +39,9 @@ public class NoteActivity extends AppCompatActivity {
         init();
     }
 
+    /**
+     * Initializes Activity element
+     */
     private void init() {
         listView = findViewById(R.id.listView_notes);
 
@@ -75,10 +79,10 @@ public class NoteActivity extends AppCompatActivity {
                     Note toDelete = adapter.getItem(position);
                    if(!toDelete.delete(getApplicationContext()))
                    {
+                       Toast.makeText(getApplicationContext(),"Cant delete note",Toast.LENGTH_SHORT).show();
                        Log.d("debug","Cant delete note");
                        return false;
                    }
-                   Log.d("debug","deleted " + toDelete);
                    update();
                    return true;
                 }
@@ -88,6 +92,9 @@ public class NoteActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Updates ListView
+     */
     private void update()
     {
         adapter = new ArrayAdapter<Note>(this, android.R.layout.simple_list_item_1,
@@ -103,9 +110,14 @@ public class NoteActivity extends AppCompatActivity {
         init();
     }
 
+    /**
+     * Starts Workout activity
+     * @param view View instance
+     */
     public void startWorkoutActivity(View view) {
         if(Settings.getInstance().getCurrentClient() == null)
         {
+            Toast.makeText(this,"No client chosen",Toast.LENGTH_SHORT).show();
             Log.d("debug","No client chosen");
             return;
         }
@@ -113,15 +125,24 @@ public class NoteActivity extends AppCompatActivity {
         startActivity(mIntent);
     }
 
+    /**
+     * Starts Profile activity
+     * @param view View instance
+     */
     public void startProfileActivity(View view) {
         Intent mIntent = new Intent(this,ProfileActivity.class);
         mIntent.putExtra("Logged", Settings.getInstance().isClientLogged());
         startActivity(mIntent);
     }
 
+    /**
+     * Starts History activity
+     * @param view View instance
+     */
     public void startHistoryActivity(View view){
         if(Settings.getInstance().getCurrentClient() == null)
         {
+            Toast.makeText(this,"No client chosen",Toast.LENGTH_SHORT).show();
             Log.d("debug","No client chosen");
             return;
         }
@@ -129,33 +150,54 @@ public class NoteActivity extends AppCompatActivity {
         startActivity(mIntent);
     }
 
+    /**
+     * Starts Settings activity
+     * @param view View instance
+     */
     public void startSettingsActivity(View view) {
         Intent mIntent = new Intent(this, NoteActivity.class);
         startActivity(mIntent);
     }
 
+    /**
+     * Does nothing, purposefully
+     * @param view
+     */
     public void textViewSwitch(View view) {
     }
 
+    /**
+     * Adds note to SharePreferences
+     * @param view View instance
+     */
     public void addNote(View view) {
         if(!Settings.getInstance().isClientLogged())
         {
+            Toast.makeText(this,"No client logged",Toast.LENGTH_SHORT).show();
             Log.d("debug","No client logged");
             return;
         }
         EditText noteText = findViewById(R.id.editText_Note);
         String text = noteText.getText().toString();
+
         if(text.equals(""))
         {
+            Toast.makeText(this,"Cant add empty string",Toast.LENGTH_SHORT).show();
             Log.d("debug","Cant add empty string");
             return;
         }
+
         Note note = new Note(text,Settings.getInstance().getCurrentClient());
         note.save(this);
 
         update();
     }
 
+    /**
+     * If clicked outside of EdiText, hides keyboard
+     * @param event Event instance
+     * @return dispatchTouchEvent(event)
+     */
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {

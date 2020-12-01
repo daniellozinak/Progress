@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
@@ -47,9 +48,7 @@ public class WorkoutDetail extends AppCompatActivity {
 
         //load workout for index
         int index = getIntent().getIntExtra("workoutID",-1);
-        findWorkout(index);
-
-        Log.d("debug","OnCreate : " + currentWorkout);
+        loadWorkout(index);
 
         init();
     }
@@ -60,21 +59,29 @@ public class WorkoutDetail extends AppCompatActivity {
 
         //load workout for index
         int index = getIntent().getIntExtra("workoutID",-1);
-        findWorkout(index);
+        loadWorkout(index);
         textViewAppName.setText(currentWorkout.getWorkoutName());
-
-        Log.d("debug","OnResume : " + currentWorkout);
     }
 
-    public boolean findWorkout(int id)
+    /**
+     * Loads Client
+     * @param id ClientRow id
+     * @return True if loaded, False if not
+     */
+    public boolean loadWorkout(int id)
     {
         currentWorkout = new Workout();
         return currentWorkout.load(id);
     }
 
+    /**
+     * Starts Workout Activity
+     * @param view View instance
+     */
     public void startWorkoutActivity(View view) {
         if(Settings.getInstance().getCurrentClient() == null)
         {
+            Toast.makeText(this,"No Client chosen",Toast.LENGTH_SHORT).show();
             Log.d("debug","No client chosen");
             return;
         }
@@ -82,15 +89,24 @@ public class WorkoutDetail extends AppCompatActivity {
         startActivity(mIntent);
     }
 
+    /**
+     * Starts Profile Activity
+     * @param view View instance
+     */
     public void startProfileActivity(View view) {
         Intent mIntent = new Intent(this, ProfileActivity.class);
         mIntent.putExtra("Logged", Settings.getInstance().isClientLogged());
         startActivity(mIntent);
     }
 
+    /**
+     * Starts History Activity
+     * @param view View instance
+     */
     public void startHistoryActivity(View view){
         if(Settings.getInstance().getCurrentClient() == null)
         {
+            Toast.makeText(this,"No Client chosen",Toast.LENGTH_SHORT).show();
             Log.d("debug","No client chosen");
             return;
         }
@@ -98,13 +114,21 @@ public class WorkoutDetail extends AppCompatActivity {
         startActivity(mIntent);
     }
 
+    /**
+     * Starts Settings Activity
+     * @param view View instance
+     */
     public void startSettingsActivity(View view) {
         Intent mIntent = new Intent(this, NoteActivity.class);
         startActivity(mIntent);
     }
 
+    /**
+     * Initializes Activity elements
+     */
     private void init()
     {
+        //find elements
         this.textViewStart = findViewById(R.id.textView_start);
         this.textViewDuration = findViewById(R.id.textView_duration);
         this.textViewVolume = findViewById(R.id.textView_volume);
@@ -116,14 +140,15 @@ public class WorkoutDetail extends AppCompatActivity {
         final SimpleDateFormat sdt = new SimpleDateFormat("HH:mm:ss");
         sdt.setTimeZone(TimeZone.getTimeZone("GMT"));
 
+        //set adapter
         adapter = new ArrayAdapter<Exercise>(this,
                 android.R.layout.simple_list_item_1,this.currentWorkout.getExerciseList());
         this.textViewVolume.setText("Volume : " + currentWorkout.getVolume() + " kg");
         this.textViewDuration.setText("Duration: " + sdt.format(new Date(currentWorkout.getDuration())));
         this.textViewStart.setText("Start: " + sdt.format(new Date(currentWorkout.getWorkoutRow().getStart())));
-
         listViewExercise.setAdapter(adapter);
 
+        //make creator
         SwipeMenuCreator creator = new SwipeMenuCreator() {
 
             @Override
@@ -145,12 +170,14 @@ public class WorkoutDetail extends AppCompatActivity {
         // set creator
         listViewExercise.setMenuCreator(creator);
 
+        //setup onItemClicklistener
         listViewExercise.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
                 switch (index) {
                     case 0:
+                        //remove exercise at position
                         removeExercise(position);
                         break;
                 }
@@ -162,11 +189,16 @@ public class WorkoutDetail extends AppCompatActivity {
         textViewAppName.setText(currentWorkout.getWorkoutName());
     }
 
+    /**
+     * Removes exercise at position
+     * @param position Exercise position
+     */
     private void removeExercise(int position)
     {
         Exercise toDelete = this.currentWorkout.getExerciseList().get(position);
         if(!toDelete.delete())
         {
+            Toast.makeText(this,"Cant delete Exercise",Toast.LENGTH_SHORT).show();
             Log.d("debug","Cant delete Exercise");
             return;
         }
@@ -174,6 +206,9 @@ public class WorkoutDetail extends AppCompatActivity {
         update();
     }
 
+    /**
+     * updates ListView
+     */
     private void update()
     {
         adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,this.currentWorkout.getExerciseList());

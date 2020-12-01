@@ -17,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
@@ -44,11 +45,14 @@ public class ShowProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show_profile);
 
         init();
-        updateListView();
+        update();
     }
 
+    /**
+     * updates List View
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void updateListView()
+    private void update()
     {
         DatabaseHelper dbHelper = new DatabaseHelper(getApplicationContext());
         ClientTable clientInstance     = ClientTable.getInstance();
@@ -58,9 +62,14 @@ public class ShowProfileActivity extends AppCompatActivity {
         listView.setAdapter(clientAdapter);
     }
 
+    /**
+     * Starts Workout activity
+     * @param view View instance
+     */
     public void startWorkoutActivity(View view) {
         if(Settings.getInstance().getCurrentClient() == null)
         {
+            Toast.makeText(this,"No client chosen",Toast.LENGTH_SHORT).show();
             Log.d("debug","No client chosen");
             return;
         }
@@ -68,15 +77,24 @@ public class ShowProfileActivity extends AppCompatActivity {
         startActivity(mIntent);
     }
 
+    /**
+     * Starts Profile activity
+     * @param view View instance
+     */
     public void startProfileActivity(View view) {
         Intent mIntent = new Intent(this,ProfileActivity.class);
         mIntent.putExtra("Logged", Settings.getInstance().isClientLogged());
         startActivity(mIntent);
     }
 
+    /**
+     * Starts History activity
+     * @param view View instance
+     */
     public void startHistoryActivity(View view){
         if(Settings.getInstance().getCurrentClient() == null)
         {
+            Toast.makeText(this,"No client chosen",Toast.LENGTH_SHORT).show();
             Log.d("debug","No client chosen");
             return;
         }
@@ -84,28 +102,47 @@ public class ShowProfileActivity extends AppCompatActivity {
         startActivity(mIntent);
     }
 
+    /**
+     * Starts Settings activity
+     * @param view View instance
+     */
     public void startSettingsActivity(View view) {
         Intent mIntent = new Intent(this, NoteActivity.class);
         startActivity(mIntent);
     }
 
+    /**
+     * Does nothing, purposefully
+     * @param view
+     */
     public void textViewSwitch(View view) {
     }
 
+    /**
+     * Add client to DB
+     * @param view View instance
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void addProfile(View view) {
         if(!this.createProfile(this.editTextProfile.getText().toString()))
         {
+            Toast.makeText(this,"Cant create profile",Toast.LENGTH_SHORT).show();
             Log.d("debug","Cant create profile");
             return;
         }
-        updateListView();
+        update();
     }
 
+    /**
+     * Creates Client
+     * @param nickname ClientRow Nickname
+     * @return True if created, False if not
+     */
     private boolean createProfile(String nickname)
     {
         if(nickname.equals(""))
         {
+            Toast.makeText(this,"No nickname set",Toast.LENGTH_SHORT).show();
             Log.d("debug","No nickname set");
             return false;
         }
@@ -155,6 +192,9 @@ public class ShowProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Initializes Activity Elements
+     */
     private void init()
     {
         listView = findViewById(R.id.profileListView);
@@ -213,6 +253,10 @@ public class ShowProfileActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Chooses client
+     * @param position position in ListView
+     */
     private void chooseClient(int position)
     {
         Intent mIntent = new Intent(getApplicationContext(),ProfileActivity.class);
@@ -220,6 +264,10 @@ public class ShowProfileActivity extends AppCompatActivity {
         startActivity(mIntent);
     }
 
+    /**
+     * Deletes client
+     * @param position position in ListView
+     */
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void deleteClient(int position)
     {
@@ -227,11 +275,11 @@ public class ShowProfileActivity extends AppCompatActivity {
             Client toDelete = (Client)clientAdapter.getItem(position);
             if(!toDelete.delete())
             {
+                Toast.makeText(this,"Cant delete Client",Toast.LENGTH_SHORT).show();
                 Log.d("debug","Cant delete Client");
                 return;
             }
-            Log.d("debug",toDelete + " deleted");
-            updateListView();
+            update();
         } catch (Exception e)
         {}
     }

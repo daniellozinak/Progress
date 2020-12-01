@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.example.progress.backend.DatabaseHelper;
-import com.example.progress.backend.row.ClientRow;
 import com.example.progress.logic.Client;
 
 /**
@@ -28,7 +27,12 @@ public class Settings {
 
     private DatabaseHelper helper;
 
-    public void saveClient(Context context)
+
+    /**
+     * Saves logged client into SharedPreferences
+     * @param context Application context instance
+     */
+    public void saveDefaultClient(Context context)
     {
         @SuppressLint("WrongConstant") SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_APPEND);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -36,6 +40,10 @@ public class Settings {
         editor.apply();
     }
 
+    /**
+     * Sets default client from SharedPreferences
+     * @param context Application context instance
+     */
     public void setDefaultClient(Context context)
     {
         @SuppressLint("WrongConstant") SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_APPEND);

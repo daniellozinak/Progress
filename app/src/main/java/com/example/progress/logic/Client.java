@@ -34,6 +34,10 @@ public class Client extends Entity {
         this.clientRow = client;
     }
 
+    /**
+     * Client constructor
+     * @param id ClientRow id
+     */
     public Client(int id)
     {
         this.clientRow = ClientTable.getInstance()
