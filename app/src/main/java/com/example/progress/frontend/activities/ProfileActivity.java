@@ -258,7 +258,7 @@ public class ProfileActivity extends AppCompatActivity {
         Date minDate = calendarMin.getTime();
 
         //loop trough x weeks
-        for(int i = 0; i < (DAY_LIMIT/7) ; i ++)
+        for(int i = 0; i < ((DAY_LIMIT + 1 )/7) ; i ++)
         {
             //get day in week
             int dayInWeek = calendarMin.get(Calendar.DAY_OF_WEEK);
@@ -276,15 +276,14 @@ public class ProfileActivity extends AppCompatActivity {
                         workoutsInWeek++;
                     }
                 }
-
                 //add one day
                 calendarMin.add(Calendar.DATE,1);
                 dayInWeek = calendarMin.get(Calendar.DAY_OF_WEEK);
             }
 
+            Date current = calendarMin.getTime();
             //add data
             seriesFrequency.appendData(new DataPoint(calendarMin.getTime(),workoutsInWeek),false,5);
-
             //add one day
             calendarMin.add(Calendar.DATE,1);
         }

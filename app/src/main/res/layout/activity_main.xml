@@ -92,6 +92,7 @@
             android:background="#212529"
             android:fontFamily="casual"
             android:gravity="center"
+            android:text=""
             android:textSize="25dp"
             android:textStyle="bold"
             android:hint="WorkoutName" />

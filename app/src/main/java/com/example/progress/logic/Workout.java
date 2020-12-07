@@ -172,6 +172,10 @@ public class Workout extends Entity {
         assert (workoutRow != null);
         //set end timestamp to workout and update the database
         workoutRow.setEnd(new Date().getTime());
+        if(workoutRow.getName().equals(""))
+        {
+            workoutRow.setName("My Workout");
+        }
         if (!WorkoutTable.getInstance().insertWorkout(workoutRow, Settings.getInstance().getHelper())) {
             return false;
         }
@@ -213,6 +217,6 @@ public class Workout extends Entity {
     public String toString() {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat sdt = new SimpleDateFormat("HH:mm:ss");
         sdt.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return this.workoutRow.getName() + " date:[" + new Date(this.workoutRow.getStart()) + "] duration:[" + sdt.format(this.getDuration()) + "]";
+        return this.workoutRow.getName() + ", " + sdt.format(this.getDuration());
     }
 }

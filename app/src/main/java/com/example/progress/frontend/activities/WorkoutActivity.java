@@ -169,13 +169,13 @@ public class WorkoutActivity extends AppCompatActivity {
      */
     public void startWorkout(View view) {
         //check if there is a current client
+
         if(Settings.getInstance().getCurrentClient() == null)
         {
             Toast.makeText(getApplicationContext(), "You need to chose profile first", Toast.LENGTH_SHORT).show();
             Log.d("debug","You need to chose profile first");
             return;
         }
-
 
         if(!Settings.getInstance().getCurrentClient().startWorkout(System.currentTimeMillis(),workoutName.toString()))
         {
@@ -225,6 +225,10 @@ public class WorkoutActivity extends AppCompatActivity {
         Log.d("debug","Workout started");
         this.runTimer();
         this.setVisibility();
+
+
+        TextView textView = findViewById(R.id.text_appname);
+        textView.setText("MyWorkout");
     }
 
     /**
@@ -240,6 +244,7 @@ public class WorkoutActivity extends AppCompatActivity {
             return;
         }
 
+
         if(!Settings.getInstance().getCurrentClient().endWorkout())
         {
             Toast.makeText(getApplicationContext(), "Can't end workout", Toast.LENGTH_SHORT).show();
@@ -251,7 +256,6 @@ public class WorkoutActivity extends AppCompatActivity {
         //clear adapter and notify
         this.adapter.clear();
         this.adapter.notifyDataSetChanged();
-
         this.workoutName.setText("Progress");
 
         Toast.makeText(getApplicationContext(), "Workout ended", Toast.LENGTH_SHORT).show();
